@@ -14,7 +14,7 @@ public class Datasource {
     private static final String CONNECTION_STRING = "jdbc:sqlite:" + DB_NAME;
 
     public static final String TABLE_POSTS = "posts";
-    public static final String COLUMN_POST_ID = "_id";
+    public static final String COLUMN_POST_ID = "post_id";
     public static final String COLUMN_POSTER_ID = "poster_id";
     public static final String COLUMN_CATEGORY = "category";
     public static final int INDEX_POST_ID = 1;
@@ -136,6 +136,8 @@ public class Datasource {
             System.out.println("Query failed: " + e.getMessage());
         }
     }
+
+    public void queryPost(String postId) {}
 
     public boolean searchTable(String table, String column, String value) {
         try (Statement statement = conn.createStatement();
