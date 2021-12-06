@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Datasource {
 
     private static final String DB_NAME = "testjava.db";
-    private static final String CONNECTION_STRING = "jdbc:sqlite:C:\\Users\\Ekke\\IdeaProjects\\SQLiteTest\\" + DB_NAME;
+    private static final String CONNECTION_STRING = "jdbc:sqlite:" + DB_NAME;
 
     public static final String TABLE_POSTS = "posts";
     public static final String COLUMN_POST_ID = "_id";
