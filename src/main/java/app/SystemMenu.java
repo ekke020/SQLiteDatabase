@@ -158,7 +158,9 @@ public class SystemMenu implements Runnable {
             scanner.nextLine();
         }
         int amount = Integer.parseInt(scanner.nextLine());
+        System.out.println("STARTING CREATE USERS");
         App.DATASOURCE.createUsers(amount);
+        System.out.println("FINISHED CREATE USERS");
 
     }
 

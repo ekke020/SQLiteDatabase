@@ -3,10 +3,10 @@ package loading;
 
 public class ProgressBar implements Runnable {
 
-    private final int taskGoal;
+    private volatile int taskGoal;
     private final int taskTick;
     private int nextTick;
-    private int progress = 0;
+    private volatile int progress = 0;
     private int ticks = 1;
 
     public ProgressBar(int taskGoal) {
@@ -17,25 +17,15 @@ public class ProgressBar implements Runnable {
 
     public void incrementProgress() {
         progress++;
-        if (progress >= nextTick) {
-            nextTick += taskTick;
-            ticks++;
-            synchronized (this) {
-                notify();
-            }
-        }
     }
 
     @Override
     public void run() {
         while (progress < taskGoal) {
-            System.out.print(getProgressBar());
-            synchronized (this) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            if (progress >= nextTick) {
+                System.out.print(getProgressBar());
+                nextTick += taskTick;
+                ticks++;
             }
         }
     }
