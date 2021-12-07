@@ -4,13 +4,19 @@ import app.App;
 
 import java.util.Scanner;
 
-import static menu.user.UserConstants.getUserConstants;
+import static menu.user.UserConstants.*;
 
 
 public class UserMenu implements Runnable {
 
     private final Scanner scanner = new Scanner(System.in);
     private boolean running = true;
+
+
+    private static final String CATEGORY_1 = "Abortions & Sins";
+    private static final String CATEGORY_2 = "The classic popes";
+    private static final String CATEGORY_3 = "Fun with bible";
+    private static final String CATEGORY_4 = "Confessions";
 
     public void start() {
         new Thread(this).start();
@@ -32,7 +38,7 @@ public class UserMenu implements Runnable {
 
                 }
                 case SEARCH_POST -> {
-
+                   searchPostByTitle();
                 }
                 case ENTER_POST -> {
 
@@ -47,10 +53,14 @@ public class UserMenu implements Runnable {
         System.out.println("\t1: View all posts");
         System.out.println("\t2: View posts by category");
         System.out.println("\t3: Search post");
-        System.out.println("\t4: Enter post");
-        System.out.println("\t5: Create post");
-        System.out.println("\t6: View profile");
-        System.out.println("\t7: Logout");
+        System.out.println("\t4: Create post");
+        System.out.println("\t5: View profile");
+        System.out.println("\t6: Logout");
+    }
+
+    private void searchPostByTitle(){
+        System.out.println("Enter word to search by:");
+        App.DATASOURCE.searchPostByTitle(scanner.nextLine());
     }
 
     private void mainMenuAlternatives(String input) {
@@ -74,11 +84,11 @@ public class UserMenu implements Runnable {
 
     private void categoryAlternatives(String input) {
         switch (input) {
-            case "1" -> {}
-            case "2" -> {}
-            case "3" -> {}
-            case "4" -> {}
-            case "5" -> {}
+            case "1" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_1);}
+            case "2" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_2);}
+            case "3" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_3);}
+            case "4" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_4);}
+            case "5" -> {setUserConstants(MAIN_MENU);}
         }
     }
 }

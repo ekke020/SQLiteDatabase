@@ -193,8 +193,6 @@ public class Datasource {
                 System.out.println("Category: " + results.getString(3));
                 System.out.println("Title: " + results.getString(4) + "\n");
             }
-
-
         } catch (SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
         }
@@ -221,6 +219,20 @@ public class Datasource {
         }
     }
 
+    public void searchPostByTitle(String value) {
+        try (Statement statement = conn.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS +" WHERE " +
+                     COLUMN_TITLE + " LIKE '" + value + "%'")){
+            while(results.next()){
+                System.out.println("Post id: " + results.getString(INDEX_POST_ID));
+                System.out.println("\tTitle: " + results.getString(INDEX_TITLE));
+                System.out.println("\tCategory: " + results.getString(INDEX_CATEGORY) + "\n");
+            }
+        } catch (SQLException e) {
+            System.out.println("Query failed: " + e.getMessage());
+        }
+    }
+
     private List<User> generateUserList(ResultSet results) throws SQLException {
         List<User> users = new ArrayList<>();
         while (results.next()) {
@@ -241,6 +253,7 @@ public class Datasource {
             post.setPostId(results.getString(INDEX_POST_ID));
             post.setUserId(results.getString(INDEX_POSTER_ID));
             post.setCategory(results.getString(INDEX_CATEGORY));
+            post.setTitle(results.getString(INDEX_TITLE));
             posts.add(post);
         }
         return posts;
