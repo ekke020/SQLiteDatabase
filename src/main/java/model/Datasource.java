@@ -160,7 +160,6 @@ public class Datasource {
                 System.out.println(results.getString(1));
                 System.out.println(results.getString(2));
                 System.out.println(results.getString(3));
-                System.out.println(results.getString(4));
             }
         } catch(SQLException e) {
             System.out.println("Query failed: " + e.getMessage());

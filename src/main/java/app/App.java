@@ -6,8 +6,9 @@ public class App {
     public static final Datasource DATASOURCE = new Datasource();
 
     public static void main(String[] args) {
-        SystemMenu systemMenu = new SystemMenu();
-        systemMenu.start();
+//        SystemMenu systemMenu = new SystemMenu();
+//        systemMenu.start();
+
     }
 
 }
