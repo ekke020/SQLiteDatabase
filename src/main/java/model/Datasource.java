@@ -46,6 +46,8 @@ public class Datasource {
             " INNER JOIN " + TABLE_USERS + " ON " + TABLE_COMMENTS + "." +
             COLUMN_POSTER_ID + "=" + TABLE_USERS + "." + COLUMN_USER_ID;
 
+    public static final String QUERY_POSTS_BY_CATEGORY = "SELECT * FROM " + TABLE_POSTS + " WHERE " + COLUMN_CATEGORY + "=?";
+
     private Connection conn;
     private PreparedStatement queryCommentsFromPost;
     private PreparedStatement queryPostsByCategory;
@@ -53,11 +55,14 @@ public class Datasource {
     public boolean open() {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING);
-            queryCommentsFromPost = conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
             createTables();
+            queryCommentsFromPost = conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
+            queryPostsByCategory = conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
+
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
@@ -65,10 +70,9 @@ public class Datasource {
     private void createTables() throws SQLException {
         try (Statement statement = conn.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS " + TABLE_POSTS +
-                    " (" + COLUMN_POST_ID + " text, " +
+                    "(" + COLUMN_POST_ID + " integer NOT NULL, " +
                     COLUMN_POSTER_ID + " text, " +
-                    COLUMN_CATEGORY + " text" +
-                    ") ");
+                    COLUMN_CATEGORY + " text, " + COLUMN_TITLE + " text," + " PRIMARY KEY (" + COLUMN_POST_ID +"))");
             statement.execute("CREATE TABLE IF NOT EXISTS " + TABLE_USERS +
                     " (" + COLUMN_USER_ID + " text, " +
                     COLUMN_USER_NAME + " text, " +
@@ -181,8 +185,15 @@ public class Datasource {
     }
 
     public void queryPostsByCategory(String input) {
-        try (Statement statement = conn.createStatement();
-            ResultSet results = statement.executeQuery()) {
+        try {
+            queryPostsByCategory.setString(1, input);
+            ResultSet results = queryPostsByCategory.executeQuery();
+            while (results.next()) {
+                System.out.println("Post id: " + results.getString(1));
+                System.out.println("Category: " + results.getString(3));
+                System.out.println("Title: " + results.getString(4) + "\n");
+            }
+
 
         } catch (SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
