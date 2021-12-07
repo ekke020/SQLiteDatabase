@@ -17,9 +17,11 @@ public class Datasource {
     public static final String COLUMN_POST_ID = "post_id";
     public static final String COLUMN_POSTER_ID = "poster_id";
     public static final String COLUMN_CATEGORY = "category";
+    public static final String COLUMN_TITLE = "title";
     public static final int INDEX_POST_ID = 1;
     public static final int INDEX_POSTER_ID = 2;
     public static final int INDEX_CATEGORY = 3;
+    public static final int INDEX_TITLE = 4;
 
     public static final String TABLE_USERS = "users";
     public static final String COLUMN_USER_ID = "_id";
@@ -36,11 +38,21 @@ public class Datasource {
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_TIME_STAMP = "time_stamp";
 
+    public static final String QUERY_COMMENTS_FROM_POST = " SELECT " + TABLE_COMMENTS + "." + COLUMN_TEXT + ", " +
+            TABLE_COMMENTS + "." + COLUMN_TIME_STAMP + ", " + ", " + TABLE_USERS + "."
+            + COLUMN_USER_NAME + " FROM " + TABLE_COMMENTS + " INNER JOIN " +
+            TABLE_POSTS + " ON " + TABLE_POSTS + "." + COLUMN_POST_ID + "=" + TABLE_COMMENTS + "." +
+            COLUMN_POST_ID + " AND " + TABLE_COMMENTS + "." + COLUMN_POST_ID + "=?" +
+            " INNER JOIN " + TABLE_USERS + " ON " + TABLE_COMMENTS + "." +
+            COLUMN_POSTER_ID + "=" + TABLE_USERS + "." + COLUMN_USER_ID;
+
     private Connection conn;
+    private PreparedStatement queryCommentsFromPost;
 
     public boolean open() {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING);
+            queryCommentsFromPost = conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
             createTables();
             return true;
         } catch (SQLException e) {
@@ -76,6 +88,9 @@ public class Datasource {
         try {
             if (conn != null) {
                 conn.close();
+            }
+            if (queryCommentsFromPost != null) {
+                queryCommentsFromPost.close();
             }
         } catch (SQLException e) {
             System.out.println("Couldn't close connection: " + e.getMessage());
@@ -137,7 +152,20 @@ public class Datasource {
         }
     }
 
-    public void queryPost(String postId) {}
+    public void queryPost(String postId) {
+        try {
+            queryCommentsFromPost.setString(1, postId);
+            ResultSet results = queryCommentsFromPost.executeQuery();
+            while (results.next()) {
+                System.out.println(results.getString(1));
+                System.out.println(results.getString(2));
+                System.out.println(results.getString(3));
+                System.out.println(results.getString(4));
+            }
+        } catch(SQLException e) {
+            System.out.println("Query failed: " + e.getMessage());
+        }
+    }
 
     public boolean searchTable(String table, String column, String value) {
         try (Statement statement = conn.createStatement();
