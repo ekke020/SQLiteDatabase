@@ -39,7 +39,7 @@ public class Datasource {
     public static final String COLUMN_TIME_STAMP = "time_stamp";
 
     public static final String QUERY_COMMENTS_FROM_POST = " SELECT " + TABLE_COMMENTS + "." + COLUMN_TEXT + ", " +
-            TABLE_COMMENTS + "." + COLUMN_TIME_STAMP + ", " + ", " + TABLE_USERS + "."
+            TABLE_COMMENTS + "." + COLUMN_TIME_STAMP + ", " + TABLE_USERS + "."
             + COLUMN_USER_NAME + " FROM " + TABLE_COMMENTS + " INNER JOIN " +
             TABLE_POSTS + " ON " + TABLE_POSTS + "." + COLUMN_POST_ID + "=" + TABLE_COMMENTS + "." +
             COLUMN_POST_ID + " AND " + TABLE_COMMENTS + "." + COLUMN_POST_ID + "=?" +
@@ -48,6 +48,7 @@ public class Datasource {
 
     private Connection conn;
     private PreparedStatement queryCommentsFromPost;
+    private PreparedStatement queryPostsByCategory;
 
     public boolean open() {
         try {
@@ -162,6 +163,28 @@ public class Datasource {
                 System.out.println(results.getString(3));
             }
         } catch(SQLException e) {
+            System.out.println("Query failed: " + e.getMessage());
+        }
+    }
+
+    public void queryPosts() {
+        try (Statement statement = conn.createStatement();
+             ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS)){
+            while (results.next()) {
+                System.out.println("Post id: " + results.getString(1));
+                System.out.println("Category: " + results.getString(3));
+                System.out.println("Title: " + results.getString(4) + "\n");
+            }
+        } catch (SQLException e) {
+            System.out.println("Query failed: " + e.getMessage());
+        }
+    }
+
+    public void queryPostsByCategory(String input) {
+        try (Statement statement = conn.createStatement();
+            ResultSet results = statement.executeQuery()) {
+
+        } catch (SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
         }
     }
