@@ -1,10 +1,11 @@
-package app;
+package menu.system;
 
+import app.App;
 import model.Datasource;
 
 import java.util.Scanner;
 
-import static app.MenuConstants.*;
+import static menu.system.MenuConstants.getMenuConstants;
 
 public class SystemMenu implements Runnable {
 
@@ -17,7 +18,6 @@ public class SystemMenu implements Runnable {
 
     @Override
     public void run() {
-        App.DATASOURCE.open();
         printMainMenu();
         mainMenuAlternatives(scanner.nextLine());
         while (running) {
@@ -47,8 +47,8 @@ public class SystemMenu implements Runnable {
 
     private void mainMenuAlternatives(String input) {
         switch (input) {
-            case "1" -> setMenuConstants(POST_TABLE_MENU);
-            case "2" -> setMenuConstants(USER_TABLE_MENU);
+            case "1" -> MenuConstants.setMenuConstants(MenuConstants.POST_TABLE_MENU);
+            case "2" -> MenuConstants.setMenuConstants(MenuConstants.USER_TABLE_MENU);
             case "3" -> closeDatabase();
         }
     }
@@ -71,7 +71,7 @@ public class SystemMenu implements Runnable {
             case "2" -> chooseFieldToEdit();
             case "3" -> chooseFieldToSearchBy(Datasource.TABLE_USERS);
             case "4" -> generateNewUsers();
-            case "5" -> setMenuConstants(MAIN_MENU);
+            case "5" -> MenuConstants.setMenuConstants(MenuConstants.MAIN_MENU);
         }
     }
 
@@ -89,7 +89,7 @@ public class SystemMenu implements Runnable {
                 promptEnterKey();
             }
             case "2" -> chooseFieldToSearchBy(Datasource.TABLE_POSTS);
-            case "3" -> setMenuConstants(MAIN_MENU);
+            case "3" -> MenuConstants.setMenuConstants(MenuConstants.MAIN_MENU);
         }
     }
 
