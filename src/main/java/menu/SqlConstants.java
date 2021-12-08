@@ -1,9 +1,11 @@
 package menu;
 
+import java.util.HashMap;
+
 public class SqlConstants {
 
     public static final String TABLE_POSTS = "posts";
-    public static final String COLUMN_POST_ID = "post_id";
+    public static final String COLUMN_POST_ID = "ID";
     public static final String COLUMN_POSTER_ID = "poster_id";
     public static final String COLUMN_CATEGORY = "category";
     public static final String COLUMN_TITLE = "title";
@@ -13,7 +15,7 @@ public class SqlConstants {
     public static final int INDEX_TITLE = 4;
 
     public static final String TABLE_USERS = "users";
-    public static final String COLUMN_USER_ID = "_id";
+    public static final String COLUMN_USER_ID = "ID";
     public static final String COLUMN_USER_NAME = "user_name";
     public static final String COLUMN_USER_EMAIL = "email";
     public static final String COLUMN_USER_PASSWORD = "password";
@@ -28,12 +30,12 @@ public class SqlConstants {
     public static final String COLUMN_TIME_STAMP = "time_stamp";
 
     public static final String CREATE_POST_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_POSTS +
-            "(" + COLUMN_POST_ID + " integer NOT NULL, " +
+            "(" + COLUMN_POST_ID + " bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
             COLUMN_POSTER_ID + " text, " +
-            COLUMN_CATEGORY + " text, " + COLUMN_TITLE + " text," + " PRIMARY KEY (" + COLUMN_POST_ID +"))";
+            COLUMN_CATEGORY + " text, " + COLUMN_TITLE + " text)";
 
     public static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USERS +
-            " (" + COLUMN_USER_ID + " text, " +
+            " (" + COLUMN_USER_ID + " BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
             COLUMN_USER_NAME + " text, " +
             COLUMN_USER_EMAIL + " text, " +
             COLUMN_USER_PASSWORD + " text" +

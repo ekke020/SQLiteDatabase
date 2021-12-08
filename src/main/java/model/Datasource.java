@@ -14,7 +14,7 @@ import static menu.SqlConstants.*;
 public class Datasource {
 
     private static final String DB_NAME = "testjava.db";
-    private static final String CONNECTION_STRING = "jdbc:sqlite:" + DB_NAME;
+    private static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/forum_database";
 
 
 
@@ -26,7 +26,7 @@ public class Datasource {
 
     public boolean open() {
         try {
-            conn = DriverManager.getConnection(CONNECTION_STRING);
+            conn = DriverManager.getConnection(CONNECTION_STRING, "root", "root");
             createTables();
             queryCommentsFromPost = conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
             queryPostsByCategory = conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
@@ -89,12 +89,10 @@ public class Datasource {
             for (int i = 0; i < amount; i++) {
                 faker = new Faker();
                 statement.execute("INSERT INTO " + TABLE_USERS + "("
-                        + COLUMN_USER_ID + ", "
                         + COLUMN_USER_NAME + ", "
                         + COLUMN_USER_EMAIL + ", "
                         + COLUMN_USER_PASSWORD + ") "
                         + "VALUES ('"
-                        + UUID.randomUUID() + "', '"
                         + faker.name().username() + "', '"
                         + faker.internet().emailAddress() + "', '"
                         + faker.internet().password(true)
