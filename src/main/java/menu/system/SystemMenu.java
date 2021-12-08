@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 import static menu.system.MenuConstants.getMenuConstants;
 
+import static menu.SqlConstants.*;
+
 public class SystemMenu implements Runnable {
 
     private final Scanner scanner = new Scanner(System.in);
@@ -65,11 +67,11 @@ public class SystemMenu implements Runnable {
     private void userTableMenuAlternatives(String input) {
         switch (input) {
             case "1" -> {
-                App.DATASOURCE.queryTable(Datasource.TABLE_USERS);
+                App.DATASOURCE.queryTable(TABLE_USERS);
                 promptEnterKey();
             }
             case "2" -> chooseFieldToEdit();
-            case "3" -> chooseFieldToSearchBy(Datasource.TABLE_USERS);
+            case "3" -> chooseFieldToSearchBy(TABLE_USERS);
             case "4" -> generateNewUsers();
             case "5" -> MenuConstants.setMenuConstants(MenuConstants.MAIN_MENU);
         }
@@ -85,10 +87,10 @@ public class SystemMenu implements Runnable {
     private void postTableMenuAlternatives(String input) {
         switch (input) {
             case "1" -> {
-                App.DATASOURCE.queryTable(Datasource.TABLE_POSTS);
+                App.DATASOURCE.queryTable(TABLE_POSTS);
                 promptEnterKey();
             }
-            case "2" -> chooseFieldToSearchBy(Datasource.TABLE_POSTS);
+            case "2" -> chooseFieldToSearchBy(TABLE_POSTS);
             case "3" -> MenuConstants.setMenuConstants(MenuConstants.MAIN_MENU);
         }
     }
@@ -117,8 +119,8 @@ public class SystemMenu implements Runnable {
     private void chooseFieldToSearchBy(String table) {
         System.out.println("Enter field to search by:");
         switch (table) {
-            case Datasource.TABLE_USERS -> printUserFields();
-            case Datasource.TABLE_POSTS -> printPostFields();
+            case TABLE_USERS -> printUserFields();
+            case TABLE_POSTS -> printPostFields();
         }
         while (!scanner.hasNextInt()) {
             System.out.println("Enter a number ...");
@@ -128,27 +130,27 @@ public class SystemMenu implements Runnable {
         scanner.nextLine();
         System.out.println("Enter search value");
         switch (table) {
-            case Datasource.TABLE_USERS ->
+            case TABLE_USERS ->
                     App.DATASOURCE.searchTable(
-                        Datasource.TABLE_USERS, Datasource.getUserColumn(number), scanner.nextLine());
-            case Datasource.TABLE_POSTS ->
+                        TABLE_USERS, Datasource.getUserColumn(number), scanner.nextLine());
+            case TABLE_POSTS ->
                     App.DATASOURCE.searchTable(
-                            Datasource.TABLE_POSTS, Datasource.getPostColumn(number), scanner.nextLine());
+                            TABLE_POSTS, Datasource.getPostColumn(number), scanner.nextLine());
         }
         promptEnterKey();
     }
 
     private void printUserFields() {
-        System.out.println("\t" + Datasource.INDEX_USER_ID + " : " + Datasource.COLUMN_USER_ID);
-        System.out.println("\t" + Datasource.INDEX_USER_NAME + " : " + Datasource.COLUMN_USER_NAME);
-        System.out.println("\t" + Datasource.INDEX_USER_EMAIL + " : " + Datasource.COLUMN_USER_EMAIL);
-        System.out.println("\t" + Datasource.INDEX_USER_PASSWORD + " : " + Datasource.COLUMN_USER_PASSWORD);
+        System.out.println("\t" + INDEX_USER_ID + " : " + COLUMN_USER_ID);
+        System.out.println("\t" + INDEX_USER_NAME + " : " + COLUMN_USER_NAME);
+        System.out.println("\t" + INDEX_USER_EMAIL + " : " + COLUMN_USER_EMAIL);
+        System.out.println("\t" + INDEX_USER_PASSWORD + " : " + COLUMN_USER_PASSWORD);
     }
 
     private void printPostFields() {
-        System.out.println("\t" + Datasource.INDEX_POST_ID + " : " + Datasource.COLUMN_POST_ID);
-        System.out.println("\t" + Datasource.INDEX_POSTER_ID + " : " + Datasource.COLUMN_POSTER_ID);
-        System.out.println("\t" + Datasource.INDEX_CATEGORY + " : " + Datasource.COLUMN_CATEGORY);
+        System.out.println("\t" + INDEX_POST_ID + " : " + COLUMN_POST_ID);
+        System.out.println("\t" + INDEX_POSTER_ID + " : " + COLUMN_POSTER_ID);
+        System.out.println("\t" + INDEX_CATEGORY + " : " + COLUMN_CATEGORY);
     }
 
     private void generateNewUsers() {

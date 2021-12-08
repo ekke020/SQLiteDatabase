@@ -8,49 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static menu.SqlConstants.*;
+
+
 public class Datasource {
 
     private static final String DB_NAME = "testjava.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:" + DB_NAME;
 
-    public static final String TABLE_POSTS = "posts";
-    public static final String COLUMN_POST_ID = "post_id";
-    public static final String COLUMN_POSTER_ID = "poster_id";
-    public static final String COLUMN_CATEGORY = "category";
-    public static final String COLUMN_TITLE = "title";
-    public static final int INDEX_POST_ID = 1;
-    public static final int INDEX_POSTER_ID = 2;
-    public static final int INDEX_CATEGORY = 3;
-    public static final int INDEX_TITLE = 4;
 
-    public static final String TABLE_USERS = "users";
-    public static final String COLUMN_USER_ID = "_id";
-    public static final String COLUMN_USER_NAME = "user_name";
-    public static final String COLUMN_USER_EMAIL = "email";
-    public static final String COLUMN_USER_PASSWORD = "password";
-    public static final int INDEX_USER_ID = 1;
-    public static final int INDEX_USER_NAME = 2;
-    public static final int INDEX_USER_EMAIL = 3;
-    public static final int INDEX_USER_PASSWORD = 4;
 
-    public static final String TABLE_COMMENTS = "comments";
-    public static final String COLUMN_INDEX = "_index";
-    public static final String COLUMN_TEXT = "text";
-    public static final String COLUMN_TIME_STAMP = "time_stamp";
-
-    public static final String QUERY_COMMENTS_FROM_POST = " SELECT " + TABLE_COMMENTS + "." + COLUMN_TEXT + ", " +
-            TABLE_COMMENTS + "." + COLUMN_TIME_STAMP + ", " + TABLE_USERS + "."
-            + COLUMN_USER_NAME + " FROM " + TABLE_COMMENTS + " INNER JOIN " +
-            TABLE_POSTS + " ON " + TABLE_POSTS + "." + COLUMN_POST_ID + "=" + TABLE_COMMENTS + "." +
-            COLUMN_POST_ID + " AND " + TABLE_COMMENTS + "." + COLUMN_POST_ID + "=?" +
-            " INNER JOIN " + TABLE_USERS + " ON " + TABLE_COMMENTS + "." +
-            COLUMN_POSTER_ID + "=" + TABLE_USERS + "." + COLUMN_USER_ID;
-
-    public static final String QUERY_POSTS_BY_CATEGORY = "SELECT * FROM " + TABLE_POSTS + " WHERE " + COLUMN_CATEGORY + "=?";
 
     private Connection conn;
     private PreparedStatement queryCommentsFromPost;
     private PreparedStatement queryPostsByCategory;
+    private PreparedStatement queryLogin;
 
     public boolean open() {
         try {
@@ -58,6 +30,7 @@ public class Datasource {
             createTables();
             queryCommentsFromPost = conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
             queryPostsByCategory = conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
+            queryLogin = conn.prepareStatement(QUERY_LOGIN);
 
             return true;
         } catch (SQLException e) {
@@ -69,24 +42,30 @@ public class Datasource {
 
     private void createTables() throws SQLException {
         try (Statement statement = conn.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS " + TABLE_POSTS +
-                    "(" + COLUMN_POST_ID + " integer NOT NULL, " +
-                    COLUMN_POSTER_ID + " text, " +
-                    COLUMN_CATEGORY + " text, " + COLUMN_TITLE + " text," + " PRIMARY KEY (" + COLUMN_POST_ID +"))");
-            statement.execute("CREATE TABLE IF NOT EXISTS " + TABLE_USERS +
-                    " (" + COLUMN_USER_ID + " text, " +
-                    COLUMN_USER_NAME + " text, " +
-                    COLUMN_USER_EMAIL + " text, " +
-                    COLUMN_USER_PASSWORD + " text" +
-                    ") ");
-            statement.execute("CREATE TABLE IF NOT EXISTS " + TABLE_COMMENTS +
-                    " (" + COLUMN_POST_ID + " text, " +
-                    COLUMN_POSTER_ID + " text, " +
-                    COLUMN_INDEX + " integer, " +
-                    COLUMN_TEXT + " text, " +
-                    COLUMN_TIME_STAMP + " text" +
-                    ") ");
+            statement.execute(CREATE_POST_TABLE);
+            statement.execute(CREATE_USER_TABLE);
+            statement.execute(CREATE_COMMENTS_TABLE);
         }
+    }
+
+    public User queryLogin(String userName, String password){
+        try {
+            queryLogin.setString(1, userName);
+            queryLogin.setString(2, password);
+            ResultSet results = queryLogin.executeQuery();
+            if(!results.next()){
+                return null;
+            }
+            User user = new User();
+            user.setUserId(results.getString(1));
+            user.setUserId(results.getString(2));
+            return user;
+        } catch(SQLException e) {
+            System.out.println("Query failed: " + e.getMessage());
+            return null;
+        }
+
+
     }
 
     public void close() {
