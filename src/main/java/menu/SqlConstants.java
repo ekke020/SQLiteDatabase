@@ -33,7 +33,7 @@ public class SqlConstants {
 
     public static final String CREATE_POST_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_POSTS +
             "(" + COLUMN_POST_ID + " bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-            COLUMN_POSTER_ID + " text, " +
+            COLUMN_POSTER_ID + " integer, " +
             COLUMN_CATEGORY + " text, " + COLUMN_TITLE + " text)";
 
     public static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USERS +
@@ -64,4 +64,8 @@ public class SqlConstants {
 
     public static final String QUERY_LOGIN = "SELECT " + COLUMN_USER_ID +", " + COLUMN_USER_NAME + " FROM "
             + TABLE_USERS +" WHERE " +COLUMN_USER_NAME + "=?" +" AND " + COLUMN_USER_PASSWORD +"=?";
+
+    public static final String CREATE_POST = "INSERT INTO " + TABLE_POSTS  +
+            "(" + COLUMN_POSTER_ID + ", " + COLUMN_CATEGORY +
+            ", " + COLUMN_TITLE + ") VALUES (?,?,?)";
 }
