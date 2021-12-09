@@ -5,40 +5,24 @@ import model.User;
 
 import java.util.Scanner;
 
-public class Login implements Runnable {
+public class Login {
 
-    private boolean running = true;
-    private Scanner scanner = new Scanner(System.in);
-    private String username;
-    private String password;
+    private static final Scanner SCANNER = new Scanner(System.in);
 
-    @Override
-    public void run() {
-        while (running) {
-            enterUsername();
-            enterPassword();
-            if(requestLogin()) {
-                running = false;
-            }
-         }
+    public static User Login() {
+        String username = enterUsername();
+        String password = enterPassword();
+        return App.DATASOURCE.queryLogin(username, password);
     }
 
-    private void enterUsername() {
+    private static String enterUsername() {
         System.out.println("Enter username:");
-        username = scanner.nextLine();
+        return SCANNER.nextLine();
     }
 
-    private void enterPassword() {
+    private static String enterPassword() {
         System.out.println("Enter password:");
-        password = scanner.nextLine();
+        return SCANNER.nextLine();
     }
 
-    private boolean requestLogin() {
-        User user = App.DATASOURCE.queryLogin(username, password);
-        if (user == null) {
-            System.out.println("The username or password is incorrect.");
-            return false;
-        }
-        return true;
-    }
 }
