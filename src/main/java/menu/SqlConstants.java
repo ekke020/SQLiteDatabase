@@ -29,6 +29,8 @@ public class SqlConstants {
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_TIME_STAMP = "time_stamp";
 
+    public static final String CREATE_DATABASE_STATEMENT = "CREATE DATABASE IF NOT EXISTS forum_database";
+
     public static final String CREATE_POST_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_POSTS +
             "(" + COLUMN_POST_ID + " bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
             COLUMN_POSTER_ID + " text, " +
