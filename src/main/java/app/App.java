@@ -1,24 +1,43 @@
 package app;
 
 import login.Login;
-import menu.system.SystemMenu;
 import menu.user.UserMenu;
 import model.Datasource;
+import model.User;
 
-import java.util.HashMap;
 
 public class App {
 
     public static final Datasource DATASOURCE = new Datasource();
+    private static UserMenu userMenu;
+    private static Thread applicationMainThread;
 
     public static void main(String[] args) {
         DATASOURCE.open();
-        SystemMenu systemMenu = new SystemMenu();
-       systemMenu.start();
-//        UserMenu userMenu = new UserMenu();
-//        userMenu.start();
-//        Login login = new Login();
-//        new Thread(login).start();
+        login();
+//        SystemMenu menu = new SystemMenu();
+//        new Thread(menu).start();
+    }
+
+    private static void login() {
+        while (true) {
+            User user = Login.Login();
+            if (user != null) {
+                userMenu = new UserMenu(user);
+                System.out.println("Welcome: " + user.getUserName() + "!");
+                applicationMainThread = new Thread(userMenu);
+                applicationMainThread.start();
+                break;
+            } else {
+                System.out.println("The username or password is incorrect.");
+            }
+        }
+    }
+
+    public static void logout(User user) {
+        System.out.println("Bye: " + user.getUserName() + "!");
+        applicationMainThread.interrupt();
+        login();
     }
 
 }
