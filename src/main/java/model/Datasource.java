@@ -6,14 +6,12 @@ import loading.ProgressBar;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static menu.SqlConstants.*;
 
 
 public class Datasource {
 
-    private static final String DB_NAME = "testjava.db";
     private static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/forum_database";
     private static final String CONNECTION_STRING_BEFORE_DATABASE_CREATION = "jdbc:mysql://localhost:3306";
 
@@ -21,7 +19,7 @@ public class Datasource {
     private PreparedStatement queryCommentsFromPost;
     private PreparedStatement queryPostsByCategory;
     private PreparedStatement queryLogin;
-
+    private PreparedStatement createPost;
 
     public void createDatabase() throws SQLException {
         try (Statement statement = conn.createStatement()) {
@@ -37,9 +35,8 @@ public class Datasource {
             createTables();
             queryCommentsFromPost = conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
             queryPostsByCategory = conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
-
             queryLogin = conn.prepareStatement(QUERY_LOGIN);
-
+            createPost = conn.prepareStatement(CREATE_POST);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
@@ -65,15 +62,13 @@ public class Datasource {
                 return null;
             }
             User user = new User();
-            user.setUserId(results.getString(1));
-            user.setUserId(results.getString(2));
+            user.setUserId(results.getInt(1));
+            user.setUserName(results.getString(2));
             return user;
         } catch(SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
             return null;
         }
-
-
     }
 
     public void close() {
@@ -156,11 +151,23 @@ public class Datasource {
         }
     }
 
+    public void createPost(User user, String category, String title) {
+        try {
+            createPost.setInt(1, user.getUserId());
+            createPost.setString(2, category);
+            createPost.setString(3, title);
+            createPost.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Insert failed: " + e.getMessage());
+        }
+    }
+
     public void queryPosts() {
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS)){
             while (results.next()) {
-                System.out.println("Post id: " + results.getString(1));
+                System.out.println("Post id: " + results.getInt(1));
                 System.out.println("Category: " + results.getString(3));
                 System.out.println("Title: " + results.getString(4) + "\n");
             }
@@ -222,7 +229,7 @@ public class Datasource {
         List<User> users = new ArrayList<>();
         while (results.next()) {
             User user = new User();
-            user.setUserId(results.getString(INDEX_USER_ID));
+            user.setUserId(results.getInt(INDEX_USER_ID));
             user.setUserName(results.getString(INDEX_USER_NAME));
             user.setEmail(results.getString(INDEX_USER_EMAIL));
             user.setPassword(results.getString(INDEX_USER_PASSWORD));
