@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import loading.ProgressBar;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Datasource {
     private PreparedStatement queryLogin;
     private PreparedStatement createPost;
     private PreparedStatement queryPost;
+    private PreparedStatement createComment;
 
 
     public void createDatabase() throws SQLException {
@@ -40,6 +42,7 @@ public class Datasource {
             queryLogin = conn.prepareStatement(QUERY_LOGIN);
             createPost = conn.prepareStatement(CREATE_POST);
             queryPost = conn.prepareStatement(QUERY_POST);
+            createComment =conn.prepareStatement(CREATE_COMMENT);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
@@ -140,16 +143,34 @@ public class Datasource {
         }
     }
 
+    public void postComment(String text, int postId, int posterId){
+        try {
+            createComment.setInt(1, postId);
+            createComment.setInt(2, posterId);
+            createComment.setInt(3, 1); // hårdkodat index, fixa metod för detta;
+            createComment.setString(4,text);
+            createComment.setString(5, LocalDate.now().toString());
+            createComment.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Insert failed: " + e.getMessage());
+        }
+
+    }
+
     public Post queryPost(int postId) {
         Post post = new Post();
         try {
             queryPost.setInt(1, postId);
             ResultSet result = queryPost.executeQuery();
             result.next();
-            System.out.println(result.getInt(INDEX_POST_ID));
-            System.out.println(result.getInt(INDEX_POSTER_ID));
-            System.out.println(result.getString(INDEX_CATEGORY));
-            System.out.println(result.getString(INDEX_TITLE));
+                post.setPostId(result.getInt(INDEX_POST_ID));
+                post.setUserId(result.getInt(INDEX_POSTER_ID));
+                post.setUserName(result.getString(INDEX_POSTER_NAME));
+                post.setCategory(result.getString(INDEX_CATEGORY));
+                post.setTitle(result.getString(INDEX_TITLE));
+                post.setText(result.getString(INDEX_POST_TEXT));
+                queryCommentsFromPost(post);
             return post;
         } catch(SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
@@ -172,11 +193,12 @@ public class Datasource {
             System.out.println("Query failed: " + e.getMessage());
         }
     }
-    public void createPost(User user, String category, String title) {
+    public void createPost(User user, String category, String title, String text) {
         try {
             createPost.setInt(1, user.getUserId());
             createPost.setString(2, category);
             createPost.setString(3, title);
+            createPost.setString(4,text);
             createPost.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -264,7 +286,7 @@ public class Datasource {
         while (results.next()) {
             Post post = new Post();
             post.setPostId(results.getInt(INDEX_POST_ID));
-            post.setUserId(results.getString(INDEX_POSTER_ID));
+            post.setUserId(results.getInt(INDEX_POSTER_ID));
             post.setCategory(results.getString(INDEX_CATEGORY));
             post.setTitle(results.getString(INDEX_TITLE));
             posts.add(post);

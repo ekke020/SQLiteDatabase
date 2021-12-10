@@ -97,7 +97,9 @@ public class UserMenu implements Runnable {
         if (!category.isEmpty()) {
             System.out.println("Enter a title for your post:\nCategory: " + category);
             String title = scanner.nextLine();
-            App.DATASOURCE.createPost(user, category, title);
+            System.out.println("Enter text for your post:");
+            String text = scanner.nextLine();
+            App.DATASOURCE.createPost(user, category, title, text);
             System.out.println("Post successfully created!");
             userConstants = MAIN_MENU;
         }
@@ -123,8 +125,18 @@ public class UserMenu implements Runnable {
         }
     }
 
+    public void postComment(int postId){
+        System.out.println("Post your comment: ");
+        App.DATASOURCE.postComment(scanner.nextLine(),postId, user.getUserId());
+    }
+
     private void enterPost(int postId) {
-        App.DATASOURCE.queryPost(postId);
+        scanner.nextLine();
+        App.DATASOURCE.queryPost(postId).printEntirePost();
+        System.out.println("Post comment? y/n");
+        if(scanner.nextLine().equalsIgnoreCase("y")){
+           postComment(postId);
+        }
     }
 
 }

@@ -1,15 +1,26 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Post {
 
     private int postId;
-    private String userId;
+    private int userId;
     private String category;
     private String title;
+    private String userName;
+    private String text;
     private final List<Comment> comments = new ArrayList<>();
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public void addComment(Comment comment) {
         comments.add(comment);
@@ -27,12 +38,19 @@ public class Post {
         this.postId = postId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public void printEntirePost(){
+        comments.sort(Comparator.comparingInt(Comment::getIndex));
+
+        System.out.println(title + "\n\t( posted by user " + userName + " in category " + category + ")\n\t" + text + "\n");
+        comments.forEach(System.out::println);
     }
 
     @Override

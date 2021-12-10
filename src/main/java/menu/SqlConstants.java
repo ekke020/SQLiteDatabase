@@ -9,10 +9,13 @@ public class SqlConstants {
     public static final String COLUMN_POSTER_ID = "poster_id";
     public static final String COLUMN_CATEGORY = "category";
     public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_POST_TEXT = "text";
     public static final int INDEX_POST_ID = 1;
     public static final int INDEX_POSTER_ID = 2;
     public static final int INDEX_CATEGORY = 3;
     public static final int INDEX_TITLE = 4;
+    public static final int INDEX_POST_TEXT = 5;
+    public static final int INDEX_POSTER_NAME = 6;
 
     public static final String TABLE_USERS = "users";
     public static final String COLUMN_USER_ID = "ID";
@@ -34,7 +37,7 @@ public class SqlConstants {
     public static final String CREATE_POST_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_POSTS +
             "(" + COLUMN_POST_ID + " bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
             COLUMN_POSTER_ID + " integer, " +
-            COLUMN_CATEGORY + " text, " + COLUMN_TITLE + " text)";
+            COLUMN_CATEGORY + " text, " + COLUMN_TITLE + " text, " + COLUMN_POST_TEXT + " text)";
 
     public static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USERS +
             " (" + COLUMN_USER_ID + " BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
@@ -67,8 +70,17 @@ public class SqlConstants {
 
     public static final String CREATE_POST = "INSERT INTO " + TABLE_POSTS  +
             "(" + COLUMN_POSTER_ID + ", " + COLUMN_CATEGORY +
-            ", " + COLUMN_TITLE + ") VALUES (?,?,?)";
+            ", " + COLUMN_TITLE +  ", " + COLUMN_POST_TEXT +") VALUES (?,?,?,?)";
 
-    public static final String QUERY_POST = "SELECT * FROM " + TABLE_POSTS + " WHERE " +  COLUMN_POST_ID + "=?";
+    public static final String CREATE_COMMENT = "INSERT INTO " + TABLE_COMMENTS + " VALUES" +"(?,?,?,?,?)"; //byta namn?
+
+    //select posts.ID, posts.poster_id, posts.category, posts.title , users.user_name from posts INNER JOIN users on users.ID=posts.poster_id;
+
+    public static final String QUERY_POST = "SELECT " + TABLE_POSTS + "." + COLUMN_POST_ID + ", " + TABLE_POSTS + "." +
+            COLUMN_POSTER_ID + ", " + TABLE_POSTS + "." + COLUMN_CATEGORY + ", " + TABLE_POSTS + "." + COLUMN_TITLE +
+            ", " + TABLE_POSTS + "." + COLUMN_POST_TEXT + ", " + TABLE_USERS + "." + COLUMN_USER_NAME + " FROM " +
+            TABLE_POSTS + " INNER JOIN " + TABLE_USERS + " ON " + TABLE_USERS + "." + COLUMN_USER_ID + "=" +
+            TABLE_POSTS + "." + COLUMN_POSTER_ID + " WHERE " + TABLE_USERS + "." + COLUMN_POST_ID + "=?";
+
 
 }
