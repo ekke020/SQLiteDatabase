@@ -44,20 +44,20 @@ public class SqlConstants {
             ") ";
 
     public static final String CREATE_COMMENTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMENTS +
-            " (" + COLUMN_POST_ID + " text, " +
-            COLUMN_POSTER_ID + " text, " +
+            " (" + COLUMN_POST_ID + " integer, " +
+            COLUMN_POSTER_ID + " integer, " +
             COLUMN_INDEX + " integer, " +
             COLUMN_TEXT + " text, " +
             COLUMN_TIME_STAMP + " text" +
             ") ";
 
     public static final String QUERY_COMMENTS_FROM_POST = " SELECT " + TABLE_COMMENTS + "." + COLUMN_TEXT + ", " +
-            TABLE_COMMENTS + "." + COLUMN_TIME_STAMP + ", " + TABLE_USERS + "."
-            + COLUMN_USER_NAME + " FROM " + TABLE_COMMENTS + " INNER JOIN " +
-            TABLE_POSTS + " ON " + TABLE_POSTS + "." + COLUMN_POST_ID + "=" + TABLE_COMMENTS + "." +
-            COLUMN_POST_ID + " AND " + TABLE_COMMENTS + "." + COLUMN_POST_ID + "=?" +
-            " INNER JOIN " + TABLE_USERS + " ON " + TABLE_COMMENTS + "." +
-            COLUMN_POSTER_ID + "=" + TABLE_USERS + "." + COLUMN_USER_ID;
+            TABLE_COMMENTS + "." + COLUMN_INDEX + ", " + TABLE_COMMENTS + "." + COLUMN_TIME_STAMP +
+            ", " + TABLE_USERS + "." + COLUMN_USER_NAME +
+            " FROM " + TABLE_COMMENTS + " INNER JOIN " + TABLE_POSTS + " ON " + TABLE_POSTS +
+            "." + COLUMN_POST_ID + "=" + TABLE_COMMENTS + "." + COLUMN_POST_ID + " AND " +
+            TABLE_COMMENTS + "." + COLUMN_POST_ID + "=?" + " INNER JOIN " + TABLE_USERS +
+            " ON " + TABLE_COMMENTS + "." + COLUMN_POSTER_ID + "=" + TABLE_USERS + "." + COLUMN_USER_ID;
 
     public static final String QUERY_POSTS_BY_CATEGORY = "SELECT * FROM "
             + TABLE_POSTS + " WHERE " + COLUMN_CATEGORY + "=?";
@@ -68,4 +68,7 @@ public class SqlConstants {
     public static final String CREATE_POST = "INSERT INTO " + TABLE_POSTS  +
             "(" + COLUMN_POSTER_ID + ", " + COLUMN_CATEGORY +
             ", " + COLUMN_TITLE + ") VALUES (?,?,?)";
+
+    public static final String QUERY_POST = "SELECT * FROM " + TABLE_POSTS + " WHERE " +  COLUMN_POST_ID + "=?";
+
 }

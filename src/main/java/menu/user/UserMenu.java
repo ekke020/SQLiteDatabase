@@ -39,7 +39,8 @@ public class UserMenu implements Runnable {
                     categoryAlternatives(scanner.nextLine());
                 }
                 case POST_MENU -> {
-
+                    System.out.println("enter post id");
+                    enterPost(scanner.nextInt());
                 }
                 case SEARCH_POST -> {
                    searchPostByTitle();
@@ -76,7 +77,7 @@ public class UserMenu implements Runnable {
             case "2" -> userConstants = CATEGORY_MENU;
             case "3" -> userConstants = SEARCH_POST;
             case "4" -> userConstants = CREATE_POST;
-            case "5" -> {}
+            case "5" -> userConstants = POST_MENU;
             case "6" -> userConstants = LOGOUT;
         }
     }
@@ -120,6 +121,10 @@ public class UserMenu implements Runnable {
             case "4" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_4);}
             case "5" -> {userConstants = MAIN_MENU;}
         }
+    }
+
+    private void enterPost(int postId) {
+        App.DATASOURCE.queryPost(postId);
     }
 
 }

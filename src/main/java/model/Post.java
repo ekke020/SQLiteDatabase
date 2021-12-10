@@ -1,17 +1,29 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Post {
 
-    private String postId;
+    private int postId;
     private String userId;
     private String category;
     private String title;
+    private final List<Comment> comments = new ArrayList<>();
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setPostId(String postId) {
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
         this.postId = postId;
     }
 

@@ -20,6 +20,8 @@ public class Datasource {
     private PreparedStatement queryPostsByCategory;
     private PreparedStatement queryLogin;
     private PreparedStatement createPost;
+    private PreparedStatement queryPost;
+
 
     public void createDatabase() throws SQLException {
         try (Statement statement = conn.createStatement()) {
@@ -37,6 +39,7 @@ public class Datasource {
             queryPostsByCategory = conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
             queryLogin = conn.prepareStatement(QUERY_LOGIN);
             createPost = conn.prepareStatement(CREATE_POST);
+            queryPost = conn.prepareStatement(QUERY_POST);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
@@ -137,20 +140,38 @@ public class Datasource {
         }
     }
 
-    public void queryPost(String postId) {
+    public Post queryPost(int postId) {
+        Post post = new Post();
         try {
-            queryCommentsFromPost.setString(1, postId);
-            ResultSet results = queryCommentsFromPost.executeQuery();
-            while (results.next()) {
-                System.out.println(results.getString(1));
-                System.out.println(results.getString(2));
-                System.out.println(results.getString(3));
-            }
+            queryPost.setInt(1, postId);
+            ResultSet result = queryPost.executeQuery();
+            result.next();
+            System.out.println(result.getInt(INDEX_POST_ID));
+            System.out.println(result.getInt(INDEX_POSTER_ID));
+            System.out.println(result.getString(INDEX_CATEGORY));
+            System.out.println(result.getString(INDEX_TITLE));
+            return post;
         } catch(SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
+            return null;
         }
     }
 
+    private void queryCommentsFromPost(Post post) {
+        try {
+            queryCommentsFromPost.setInt(1, post.getPostId());
+            ResultSet results = queryCommentsFromPost.executeQuery();
+            while (results.next()) {
+                String text = results.getString(1); // text
+                int index = results.getInt(2); // index
+                String date = results.getString(3); // datum
+                String posterName = results.getString(4); // poster name
+                post.addComment(new Comment(text, posterName, date, index));
+            }
+        } catch (SQLException e) {
+            System.out.println("Query failed: " + e.getMessage());
+        }
+    }
     public void createPost(User user, String category, String title) {
         try {
             createPost.setInt(1, user.getUserId());
@@ -242,7 +263,7 @@ public class Datasource {
         List<Post> posts = new ArrayList<>();
         while (results.next()) {
             Post post = new Post();
-            post.setPostId(results.getString(INDEX_POST_ID));
+            post.setPostId(results.getInt(INDEX_POST_ID));
             post.setUserId(results.getString(INDEX_POSTER_ID));
             post.setCategory(results.getString(INDEX_CATEGORY));
             post.setTitle(results.getString(INDEX_TITLE));
