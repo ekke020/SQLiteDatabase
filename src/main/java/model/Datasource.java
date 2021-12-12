@@ -173,7 +173,8 @@ public class Datasource {
                 queryCommentsFromPost(post);
             return post;
         } catch(SQLException e) {
-            System.out.println("Query failed: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("Input does not match any post ...");
             return null;
         }
     }
@@ -254,17 +255,21 @@ public class Datasource {
         }
     }
 
-    public void searchPostByTitle(String value) {
+    public boolean searchPostByTitle(String value) {
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS +" WHERE " +
                      COLUMN_TITLE + " LIKE '" + value + "%'")){
-            while(results.next()){
+            if (!results.next())
+                return false;
+            do {
                 System.out.println("Post id: " + results.getString(INDEX_POST_ID));
                 System.out.println("\tTitle: " + results.getString(INDEX_TITLE));
                 System.out.println("\tCategory: " + results.getString(INDEX_CATEGORY) + "\n");
-            }
+            } while(results.next());
+            return true;
         } catch (SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
+            return false;
         }
     }
 
