@@ -1,6 +1,7 @@
 package menu.user;
 
 import app.App;
+import login.Login;
 import model.Post;
 import model.User;
 
@@ -59,7 +60,7 @@ public class UserMenu implements Runnable {
                     createNewPost();
                 }
                 case LOGOUT -> {
-                    App.logout(user);
+                    Login.logout(user);
                     running = false;
                 }
             }
