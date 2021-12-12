@@ -1,6 +1,5 @@
 package menu;
 
-import java.util.HashMap;
 
 public class SqlConstants {
 
@@ -80,7 +79,7 @@ public class SqlConstants {
             COLUMN_POSTER_ID + ", " + TABLE_POSTS + "." + COLUMN_CATEGORY + ", " + TABLE_POSTS + "." + COLUMN_TITLE +
             ", " + TABLE_POSTS + "." + COLUMN_POST_TEXT + ", " + TABLE_USERS + "." + COLUMN_USER_NAME + " FROM " +
             TABLE_POSTS + " INNER JOIN " + TABLE_USERS + " ON " + TABLE_USERS + "." + COLUMN_USER_ID + "=" +
-            TABLE_POSTS + "." + COLUMN_POSTER_ID + " WHERE " + TABLE_USERS + "." + COLUMN_POST_ID + "=?";
+            TABLE_POSTS + "." + COLUMN_POSTER_ID + " WHERE " + TABLE_POSTS + "." + COLUMN_POST_ID + "=?";
 
 
 }
