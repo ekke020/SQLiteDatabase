@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class Post {
 
@@ -13,6 +14,8 @@ public class Post {
     private String userName;
     private String text;
     private final List<Comment> comments = new ArrayList<>();
+    private int borderSize;
+    private String middlePostText;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -48,9 +51,38 @@ public class Post {
 
     public void printEntirePost(){
         comments.sort(Comparator.comparingInt(Comment::getIndex));
-
-        System.out.println(title + "\n\t( posted by user " + userName + " in category " + category + ")\n\t" + text + "\n");
+        middlePostText = "    (posted by user " + userName + " in category " + category + ")";
+        buildBorder();
+        String border = calculateBorder(borderSize);
+        System.out.println(Colors.BLUE + border);
+        System.out.println("| " + title.toUpperCase(Locale.ROOT));
+        System.out.println("| " + middlePostText);
+        System.out.println("| " + text);
+        System.out.println(border + Colors.RESET);
         comments.forEach(System.out::println);
+    }
+
+    private void buildBorder() {
+        text = "    " + text;
+        borderSize = calculateBorderLength(title, middlePostText, text);
+        title += addEmptySpace(title, borderSize);
+        middlePostText += addEmptySpace(middlePostText, borderSize);
+        text += addEmptySpace(text, borderSize);
+    }
+
+    private int calculateBorderLength(String top, String middle, String bottom) {
+        int size = Math.max(top.length(), middle.length());
+        size = Math.max(bottom.length(), size);
+        return size;
+    }
+
+    private String calculateBorder(int size) {
+        return "|" + "-".repeat(Math.max(0, size)) + "--|";
+    }
+
+    private String addEmptySpace(String line, int size) {
+        int length = size - line.length();
+        return " ".repeat(length) + " |";
     }
 
     @Override
