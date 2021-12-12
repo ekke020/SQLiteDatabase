@@ -32,6 +32,8 @@ public class Comment {
 
     @Override
     public String toString() {
-        return posterName + "\t" + timeStamp + "\n" + text + "\n";
+        return Colors.PURPLE + "\t" + posterName + Colors.RESET +
+                " -- " + Colors.PURPLE + timeStamp + Colors.RESET +
+                "\n\t" + Colors.RED + text + Colors.RESET + "\n";
     }
 }
