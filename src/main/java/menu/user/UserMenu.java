@@ -1,6 +1,7 @@
 package menu.user;
 
 import app.App;
+import model.Post;
 import model.User;
 
 import java.util.Scanner;
@@ -12,6 +13,8 @@ public class UserMenu implements Runnable {
 
     private final Scanner scanner = new Scanner(System.in);
     private final User user;
+    private Post currentPost;
+
     private boolean running = true;
     private UserConstants userConstants = MAIN_MENU;
 
@@ -33,14 +36,21 @@ public class UserMenu implements Runnable {
                     printMainMenu();
                     mainMenuAlternatives(scanner.nextLine());
                 }
+                case PRINT_POSTS -> {
+                    App.DATASOURCE.queryPosts();
+                    userConstants = ENTER_POST;
+                }
+                case ENTER_POST -> {
+                    enterPost();
+                }
+                case POST_MENU -> {
+                    printPostMenu();
+                    postMenuAlternatives(scanner.nextLine());
+                }
                 case CATEGORY_MENU -> {
                     System.out.println("CATEGORY MENU");
                     printCategoryChoices();
                     categoryAlternatives(scanner.nextLine());
-                }
-                case POST_MENU -> {
-                    System.out.println("enter post id");
-                    enterPost(scanner.nextInt());
                 }
                 case SEARCH_POST -> {
                    searchPostByTitle();
@@ -62,22 +72,29 @@ public class UserMenu implements Runnable {
         System.out.println("\t2: View posts by category");
         System.out.println("\t3: Search post");
         System.out.println("\t4: Create post");
-        System.out.println("\t5: View profile");
+        System.out.println("\t5: Enter post");
         System.out.println("\t6: Logout");
     }
 
     private void searchPostByTitle(){
-        System.out.println("Enter word to search by:");
-        App.DATASOURCE.searchPostByTitle(scanner.nextLine());
+        System.out.println("Enter word to search by (B to return):");
+        String input = scanner.nextLine();
+        if (input.equalsIgnoreCase("b")) {
+            userConstants = MAIN_MENU;
+        } else if (App.DATASOURCE.searchPostByTitle(input)) {
+            userConstants = ENTER_POST;
+        } else {
+            System.out.println("Failed to find any post ... ");
+        }
     }
 
     private void mainMenuAlternatives(String input) {
         switch (input) {
-            case "1" -> App.DATASOURCE.queryPosts();
+            case "1" -> userConstants = PRINT_POSTS;
             case "2" -> userConstants = CATEGORY_MENU;
             case "3" -> userConstants = SEARCH_POST;
             case "4" -> userConstants = CREATE_POST;
-            case "5" -> userConstants = POST_MENU;
+            case "5" -> userConstants = ENTER_POST;
             case "6" -> userConstants = LOGOUT;
         }
     }
@@ -87,7 +104,7 @@ public class UserMenu implements Runnable {
         System.out.println("\t2: The classic popes");
         System.out.println("\t3: Fun with bible");
         System.out.println("\t4: Confessions");
-        System.out.println("\t5: Back");
+        System.out.println("\t0: Back");
     }
 
     private void createNewPost() {
@@ -111,32 +128,65 @@ public class UserMenu implements Runnable {
             case "2" -> {return CATEGORY_2;}
             case "3" -> {return CATEGORY_3;}
             case "4" -> {return CATEGORY_4;}
-            default -> {userConstants = MAIN_MENU; return "";}
+            case "0" -> {userConstants = MAIN_MENU; return "";}
+            default -> {return "";}
         }
     }
 
     private void categoryAlternatives(String input) {
         switch (input) {
-            case "1" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_1);}
-            case "2" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_2);}
-            case "3" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_3);}
-            case "4" -> {App.DATASOURCE.queryPostsByCategory(CATEGORY_4);}
-            case "5" -> {userConstants = MAIN_MENU;}
+            case "1" -> {
+                App.DATASOURCE.queryPostsByCategory(CATEGORY_1);
+                userConstants = ENTER_POST;
+            }
+            case "2" -> {
+                App.DATASOURCE.queryPostsByCategory(CATEGORY_2);
+                userConstants = ENTER_POST;
+            }
+            case "3" -> {
+                App.DATASOURCE.queryPostsByCategory(CATEGORY_3);
+                userConstants = ENTER_POST;
+            }
+            case "4" -> {
+                App.DATASOURCE.queryPostsByCategory(CATEGORY_4);
+                userConstants = ENTER_POST;
+            }
+            case "0" -> userConstants = MAIN_MENU;
         }
     }
 
-    public void postComment(int postId){
+    private void enterPost() {
+        System.out.println("Enter post ID to view post");
+        System.out.println("B to go back");
+        String input = scanner.nextLine();
+        if (input.equalsIgnoreCase("b")) {
+            userConstants = MAIN_MENU;
+        } else if (input.matches("[0-9]+")) {
+            currentPost = App.DATASOURCE.queryPost(Integer.parseInt(input));
+            currentPost.printEntirePost();
+            if (currentPost != null)
+                userConstants = POST_MENU;
+        } else {
+            System.out.println("Enter valid input ...");
+        }
+    }
+
+    private void printPostMenu() {
+        System.out.println("POST MENU");
+        System.out.println("1: Comment");
+        System.out.println("2: back");
+    }
+
+    private void postMenuAlternatives(String input) {
+        switch (input) {
+            case "1" -> postComment(currentPost.getPostId());
+            case "2" -> userConstants = MAIN_MENU;
+        }
+    }
+
+    private void postComment(int postId){
         System.out.println("Post your comment: ");
         App.DATASOURCE.postComment(scanner.nextLine(),postId, user.getUserId());
-    }
-
-    private void enterPost(int postId) {
-        scanner.nextLine();
-        App.DATASOURCE.queryPost(postId).printEntirePost();
-        System.out.println("Post comment? y/n");
-        if(scanner.nextLine().equalsIgnoreCase("y")){
-           postComment(postId);
-        }
     }
 
 }
