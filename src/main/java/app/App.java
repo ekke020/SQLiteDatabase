@@ -9,21 +9,18 @@ import model.User;
 public class App {
 
     public static final Datasource DATASOURCE = new Datasource();
-    private static UserMenu userMenu;
     private static Thread applicationMainThread;
 
     public static void main(String[] args) {
         DATASOURCE.open();
         login();
-//        SystemMenu menu = new SystemMenu();
-//        new Thread(menu).start();
     }
 
     private static void login() {
         while (true) {
             User user = Login.Login();
             if (user != null) {
-                userMenu = new UserMenu(user);
+                UserMenu userMenu = new UserMenu(user);
                 System.out.println("Welcome: " + user.getUserName() + "!");
                 applicationMainThread = new Thread(userMenu);
                 applicationMainThread.start();
