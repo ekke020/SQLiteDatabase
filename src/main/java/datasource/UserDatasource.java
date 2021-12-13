@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import static menu.SqlConstants.*;
 import static menu.SqlConstants.CREATE_COMMENT;
 
-public class UserDatasource extends Datasource implements DatabaseConnection{
+public class UserDatasource implements DatabaseConnection{
 
     private PreparedStatement queryPostsByCategory;
     private PreparedStatement createPost;
@@ -21,11 +21,11 @@ public class UserDatasource extends Datasource implements DatabaseConnection{
     @Override
     public void initializePreparedStatement() {
         try {
-            queryCommentsFromPost = conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
-            queryPostsByCategory = conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
-            createPost = conn.prepareStatement(CREATE_POST);
-            queryPost = conn.prepareStatement(QUERY_POST);
-            createComment = conn.prepareStatement(CREATE_COMMENT);
+            queryCommentsFromPost = Datasource.getInstance().conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
+            queryPostsByCategory = Datasource.getInstance().conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
+            createPost = Datasource.getInstance().conn.prepareStatement(CREATE_POST);
+            queryPost = Datasource.getInstance().conn.prepareStatement(QUERY_POST);
+            createComment = Datasource.getInstance().conn.prepareStatement(CREATE_COMMENT);
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class UserDatasource extends Datasource implements DatabaseConnection{
     }
 
     public boolean searchPostByTitle(String value) {
-        try (Statement statement = conn.createStatement();
+        try (Statement statement = Datasource.getInstance().conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS +" WHERE " +
                      COLUMN_TITLE + " LIKE '" + value + "%'")){
             if (!results.next())
@@ -88,7 +88,7 @@ public class UserDatasource extends Datasource implements DatabaseConnection{
     }
 
     public void queryPosts() {
-        try (Statement statement = conn.createStatement();
+        try (Statement statement = Datasource.getInstance().conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS)){
             while (results.next()) {
                 System.out.println("Post id: " + results.getInt(1));

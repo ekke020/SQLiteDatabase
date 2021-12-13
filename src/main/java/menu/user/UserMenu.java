@@ -64,7 +64,7 @@ public class UserMenu implements Runnable {
                 }
                 case LOGOUT -> {
                     userDatasource.closePreparedStatement();
-                    Login.logout(user);
+                    new Login().logout(user);
                     running = false;
                 }
             }

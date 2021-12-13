@@ -18,7 +18,7 @@ public class SystemMenu implements Runnable {
     private final AdminDatasource adminDatasource = new AdminDatasource();
 
     public SystemMenu(User user) {
-        adminDatasource.open();
+        adminDatasource.initializePreparedStatement();
     }
 
     @Override
@@ -174,7 +174,7 @@ public class SystemMenu implements Runnable {
     }
 
     private void closeDatabase() {
-        adminDatasource.close();
+        adminDatasource.closePreparedStatement();
         running = false;
     }
 

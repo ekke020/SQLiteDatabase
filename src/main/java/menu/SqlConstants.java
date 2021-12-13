@@ -71,9 +71,7 @@ public class SqlConstants {
             "(" + COLUMN_POSTER_ID + ", " + COLUMN_CATEGORY +
             ", " + COLUMN_TITLE +  ", " + COLUMN_POST_TEXT +") VALUES (?,?,?,?)";
 
-    public static final String CREATE_COMMENT = "INSERT INTO " + TABLE_COMMENTS + " VALUES" +"(?,?,?,?,?)"; //byta namn?
-
-    //select posts.ID, posts.poster_id, posts.category, posts.title , users.user_name from posts INNER JOIN users on users.ID=posts.poster_id;
+    public static final String CREATE_COMMENT = "INSERT INTO " + TABLE_COMMENTS + " VALUES" +"(?,?,?,?,?)";
 
     public static final String QUERY_POST = "SELECT " + TABLE_POSTS + "." + COLUMN_POST_ID + ", " + TABLE_POSTS + "." +
             COLUMN_POSTER_ID + ", " + TABLE_POSTS + "." + COLUMN_CATEGORY + ", " + TABLE_POSTS + "." + COLUMN_TITLE +
@@ -84,12 +82,20 @@ public class SqlConstants {
     public static final String QUERY_USER_TABLE = "SELECT * FROM " + TABLE_USERS;
     public static final String QUERY_POST_TABLE = "SELECT * FROM " + TABLE_POSTS;
 
-    public static final String CREATE_USERS = "INSERT INTO " + TABLE_USERS + "("
+    public static final String CREATE_USER_ACCOUNT = "INSERT INTO " + TABLE_USERS + "("
             + COLUMN_USER_NAME + ", "
             + COLUMN_USER_EMAIL + ", "
             + COLUMN_USER_PASSWORD + ") VALUES (?,?,?)";
 
-//    COLUMN_USER_NAME
+    //SELECT (user_name) FROM users WHERE user_name='pelle';
+
+    public static final String QUERY_USERNAME = "SELECT (" + COLUMN_USER_NAME + ") FROM " + TABLE_USERS + " WHERE "
+                + COLUMN_USER_NAME + "=?";
+
+    public static final String QUERY_EMAIL = "SELECT (" + COLUMN_USER_EMAIL + ") FROM " + TABLE_USERS + " WHERE "
+            + COLUMN_USER_EMAIL + "=?";
+
+    //    COLUMN_USER_NAME
 //    COLUMN_USER_EMAIL
 //    COLUMN_USER_PASSWORD
     public static final String UPDATE_USER_COLUMN_NAME = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_NAME + "=? WHERE " + COLUMN_USER_ID + "=?";
