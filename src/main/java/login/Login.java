@@ -1,6 +1,7 @@
 package login;
 
-import app.App;
+import datasource.LoginDatasource;
+import menu.system.SystemMenu;
 import menu.user.UserMenu;
 import model.User;
 
@@ -9,15 +10,20 @@ import java.util.Scanner;
 public class Login {
 
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static LoginDatasource datasource;
     private static Thread applicationMainThread;
 
     public static void login() {
+        datasource = new LoginDatasource();
+        datasource.initializePreparedStatement();
         while (true) {
             User user = takeCredentials();
             if (user != null) {
-                UserMenu userMenu = new UserMenu(user);
+                datasource.closePreparedStatement();
+//                UserMenu userMenu = new UserMenu(user);
+                SystemMenu systemMenu = new SystemMenu(user);
                 System.out.println("Welcome: " + user.getUserName() + "!");
-                applicationMainThread = new Thread(userMenu);
+                applicationMainThread = new Thread(systemMenu);
                 applicationMainThread.start();
                 break;
             } else {
@@ -30,7 +36,7 @@ public class Login {
     private static User takeCredentials() {
         String username = enterUsername();
         String password = enterPassword();
-        return App.DATASOURCE.queryLogin(username, password);
+        return datasource.queryLogin(username, password);
     }
 
     private static String enterUsername() {

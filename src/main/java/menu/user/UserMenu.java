@@ -1,6 +1,6 @@
 package menu.user;
 
-import app.App;
+import datasource.UserDatasource;
 import login.Login;
 import model.Post;
 import model.User;
@@ -18,6 +18,7 @@ public class UserMenu implements Runnable {
 
     private boolean running = true;
     private UserConstants userConstants = MAIN_MENU;
+    private final UserDatasource userDatasource = new UserDatasource();
 
     private static final String CATEGORY_1 = "Abortions & Sins";
     private static final String CATEGORY_2 = "The classic popes";
@@ -27,6 +28,7 @@ public class UserMenu implements Runnable {
 
     public UserMenu(User user) {
         this.user = user;
+        userDatasource.initializePreparedStatement();
     }
 
     @Override
@@ -34,11 +36,12 @@ public class UserMenu implements Runnable {
         while (running) {
             switch (userConstants) {
                 case MAIN_MENU -> {
+                    System.out.println("MAIN MENU");
                     printMainMenu();
                     mainMenuAlternatives(scanner.nextLine());
                 }
                 case PRINT_POSTS -> {
-                    App.DATASOURCE.queryPosts();
+                    userDatasource.queryPosts();
                     userConstants = ENTER_POST;
                 }
                 case ENTER_POST -> {
@@ -60,6 +63,7 @@ public class UserMenu implements Runnable {
                     createNewPost();
                 }
                 case LOGOUT -> {
+                    userDatasource.closePreparedStatement();
                     Login.logout(user);
                     running = false;
                 }
@@ -68,7 +72,6 @@ public class UserMenu implements Runnable {
     }
 
     private void printMainMenu() {
-        System.out.println("MAIN MENU");
         System.out.println("\t1: View all posts");
         System.out.println("\t2: View posts by category");
         System.out.println("\t3: Search post");
@@ -82,7 +85,7 @@ public class UserMenu implements Runnable {
         String input = scanner.nextLine();
         if (input.equalsIgnoreCase("b")) {
             userConstants = MAIN_MENU;
-        } else if (App.DATASOURCE.searchPostByTitle(input)) {
+        } else if (userDatasource.searchPostByTitle(input)) {
             userConstants = ENTER_POST;
         } else {
             System.out.println("Failed to find any post ... ");
@@ -117,7 +120,7 @@ public class UserMenu implements Runnable {
             String title = scanner.nextLine();
             System.out.println("Enter text for your post:");
             String text = scanner.nextLine();
-            App.DATASOURCE.createPost(user, category, title, text);
+            userDatasource.createPost(user, category, title, text);
             System.out.println("Post successfully created!");
             userConstants = MAIN_MENU;
         }
@@ -137,19 +140,19 @@ public class UserMenu implements Runnable {
     private void categoryAlternatives(String input) {
         switch (input) {
             case "1" -> {
-                App.DATASOURCE.queryPostsByCategory(CATEGORY_1);
+                userDatasource.queryPostsByCategory(CATEGORY_1);
                 userConstants = ENTER_POST;
             }
             case "2" -> {
-                App.DATASOURCE.queryPostsByCategory(CATEGORY_2);
+                userDatasource.queryPostsByCategory(CATEGORY_2);
                 userConstants = ENTER_POST;
             }
             case "3" -> {
-                App.DATASOURCE.queryPostsByCategory(CATEGORY_3);
+                userDatasource.queryPostsByCategory(CATEGORY_3);
                 userConstants = ENTER_POST;
             }
             case "4" -> {
-                App.DATASOURCE.queryPostsByCategory(CATEGORY_4);
+                userDatasource.queryPostsByCategory(CATEGORY_4);
                 userConstants = ENTER_POST;
             }
             case "0" -> userConstants = MAIN_MENU;
@@ -163,7 +166,7 @@ public class UserMenu implements Runnable {
         if (input.equalsIgnoreCase("b")) {
             userConstants = MAIN_MENU;
         } else if (input.matches("[0-9]+")) {
-            currentPost = App.DATASOURCE.queryPost(Integer.parseInt(input));
+            currentPost = userDatasource.queryPost(Integer.parseInt(input));
             currentPost.printEntirePost();
             if (currentPost != null)
                 userConstants = POST_MENU;
@@ -187,7 +190,7 @@ public class UserMenu implements Runnable {
 
     private void postComment(int postId){
         System.out.println("Post your comment: ");
-        App.DATASOURCE.postComment(scanner.nextLine(),postId, user.getUserId());
+        userDatasource.postComment(scanner.nextLine(),postId, user.getUserId());
     }
 
 }

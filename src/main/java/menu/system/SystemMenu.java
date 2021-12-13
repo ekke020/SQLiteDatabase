@@ -1,7 +1,9 @@
 package menu.system;
 
 import app.App;
-import model.Datasource;
+import datasource.AdminDatasource;
+import datasource.Datasource;
+import model.User;
 
 import java.util.Scanner;
 
@@ -13,9 +15,10 @@ public class SystemMenu implements Runnable {
 
     private final Scanner scanner = new Scanner(System.in);
     private boolean running = true;
+    private final AdminDatasource adminDatasource = new AdminDatasource();
 
-    public void start() {
-        new Thread(this).start();
+    public SystemMenu(User user) {
+        adminDatasource.open();
     }
 
     @Override
@@ -67,7 +70,7 @@ public class SystemMenu implements Runnable {
     private void userTableMenuAlternatives(String input) {
         switch (input) {
             case "1" -> {
-                App.DATASOURCE.queryTable(TABLE_USERS);
+                adminDatasource.queryTable(TABLE_USERS);
                 promptEnterKey();
             }
             case "2" -> chooseFieldToEdit();
@@ -87,7 +90,7 @@ public class SystemMenu implements Runnable {
     private void postTableMenuAlternatives(String input) {
         switch (input) {
             case "1" -> {
-                App.DATASOURCE.queryTable(TABLE_POSTS);
+                adminDatasource.queryTable(TABLE_POSTS);
                 promptEnterKey();
             }
             case "2" -> chooseFieldToSearchBy(TABLE_POSTS);
@@ -97,7 +100,9 @@ public class SystemMenu implements Runnable {
 
     private void chooseFieldToEdit() {
         System.out.println("Enter field to edit:");
-        printUserFields();
+        System.out.println("\t1 : " + COLUMN_USER_NAME);
+        System.out.println("\t2 : " + COLUMN_USER_EMAIL);
+        System.out.println("\t3 : " + COLUMN_USER_PASSWORD);
         while (!scanner.hasNextInt()) {
             System.out.println("Enter a number ...");
             scanner.nextLine();
@@ -106,14 +111,14 @@ public class SystemMenu implements Runnable {
         scanner.nextLine();
         System.out.println("Enter id: ");
         String id = scanner.nextLine();
-        updateColumn(Datasource.getUserColumn(number), id);
+        updateColumn(number, id);
         promptEnterKey();
     }
 
-    private void updateColumn(String column, String id) {
+    private void updateColumn(int column, String id) {
         System.out.println("Enter new value: ");
         String value = scanner.nextLine();
-        App.DATASOURCE.updateUserColumn(column, value, id);
+        adminDatasource.updateUserColumn(column, value, id);
     }
 
     private void chooseFieldToSearchBy(String table) {
@@ -131,11 +136,11 @@ public class SystemMenu implements Runnable {
         System.out.println("Enter search value");
         switch (table) {
             case TABLE_USERS ->
-                    App.DATASOURCE.searchTable(
-                        TABLE_USERS, Datasource.getUserColumn(number), scanner.nextLine());
+                    adminDatasource.searchTable(
+                        TABLE_USERS, getUserColumn(number), scanner.nextLine());
             case TABLE_POSTS ->
-                    App.DATASOURCE.searchTable(
-                            TABLE_POSTS, Datasource.getPostColumn(number), scanner.nextLine());
+                    adminDatasource.searchTable(
+                            TABLE_POSTS, getPostColumn(number), scanner.nextLine());
         }
         promptEnterKey();
     }
@@ -160,10 +165,7 @@ public class SystemMenu implements Runnable {
             scanner.nextLine();
         }
         int amount = Integer.parseInt(scanner.nextLine());
-        System.out.println("STARTING CREATE USERS");
-        App.DATASOURCE.createUsers(amount);
-        System.out.println("FINISHED CREATE USERS");
-
+        adminDatasource.createUsers(amount);
     }
 
     private void promptEnterKey() {
@@ -172,8 +174,27 @@ public class SystemMenu implements Runnable {
     }
 
     private void closeDatabase() {
-        App.DATASOURCE.close();
+        adminDatasource.close();
         running = false;
     }
 
+    private String getPostColumn(int num) {
+        String column= "";
+        switch (num) {
+            case 2 -> column = COLUMN_POSTER_ID;
+            case 3 -> column = COLUMN_CATEGORY;
+            default -> column = COLUMN_POST_ID;
+        }
+        return column;
+    }
+    private String getUserColumn(int num) {
+        String column= "";
+        switch (num) {
+            case 2 -> column = COLUMN_USER_NAME;
+            case 3 -> column = COLUMN_USER_EMAIL;
+            case 4 -> column = COLUMN_USER_PASSWORD;
+            default -> column = COLUMN_USER_ID;
+        }
+        return column;
+    }
 }

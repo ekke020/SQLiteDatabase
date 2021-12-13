@@ -81,5 +81,20 @@ public class SqlConstants {
             TABLE_POSTS + " INNER JOIN " + TABLE_USERS + " ON " + TABLE_USERS + "." + COLUMN_USER_ID + "=" +
             TABLE_POSTS + "." + COLUMN_POSTER_ID + " WHERE " + TABLE_POSTS + "." + COLUMN_POST_ID + "=?";
 
+    public static final String QUERY_USER_TABLE = "SELECT * FROM " + TABLE_USERS;
+    public static final String QUERY_POST_TABLE = "SELECT * FROM " + TABLE_POSTS;
 
+    public static final String CREATE_USERS = "INSERT INTO " + TABLE_USERS + "("
+            + COLUMN_USER_NAME + ", "
+            + COLUMN_USER_EMAIL + ", "
+            + COLUMN_USER_PASSWORD + ") VALUES (?,?,?)";
+
+//    COLUMN_USER_NAME
+//    COLUMN_USER_EMAIL
+//    COLUMN_USER_PASSWORD
+    public static final String UPDATE_USER_COLUMN_NAME = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_NAME + "=? WHERE " + COLUMN_USER_ID + "=?";
+    public static final String UPDATE_USER_COLUMN_EMAIL = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_EMAIL + "=? WHERE " + COLUMN_USER_ID + "=?";
+    public static final String UPDATE_USER_COLUMN_PASSWORD = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_PASSWORD + "=? WHERE " + COLUMN_USER_ID + "=?";
+
+    public static final String SEARCH_TABLE = "SELECT * FROM ? WHERE ? LIKE ?%";
 }
