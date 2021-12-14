@@ -13,6 +13,7 @@ public class ProgressBar implements Runnable {
         this.taskGoal = taskGoal;
         this.taskTick = taskGoal / 10;
         nextTick = taskTick;
+        System.out.print(getProgressBar());
     }
 
     public void incrementProgress() {

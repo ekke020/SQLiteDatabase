@@ -6,6 +6,7 @@ public class User {
     private String userName;
     private String email;
     private String password;
+    private String level;
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -28,6 +29,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 
     @Override

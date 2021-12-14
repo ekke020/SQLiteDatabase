@@ -21,10 +21,12 @@ public class SqlConstants {
     public static final String COLUMN_USER_NAME = "user_name";
     public static final String COLUMN_USER_EMAIL = "email";
     public static final String COLUMN_USER_PASSWORD = "password";
+    public static final String COLUMN_USER_LEVEL = "level";
     public static final int INDEX_USER_ID = 1;
     public static final int INDEX_USER_NAME = 2;
     public static final int INDEX_USER_EMAIL = 3;
     public static final int INDEX_USER_PASSWORD = 4;
+    public static final int INDEX_USER_LEVEL = 5;
 
     public static final String TABLE_COMMENTS = "comments";
     public static final String COLUMN_INDEX = "_index";
@@ -42,7 +44,8 @@ public class SqlConstants {
             " (" + COLUMN_USER_ID + " BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
             COLUMN_USER_NAME + " text, " +
             COLUMN_USER_EMAIL + " text, " +
-            COLUMN_USER_PASSWORD + " text" +
+            COLUMN_USER_PASSWORD + " text, " +
+            COLUMN_USER_LEVEL + " varchar(8) DEFAULT 'standard'" +
             ") ";
 
     public static final String CREATE_COMMENTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMENTS +
@@ -64,8 +67,10 @@ public class SqlConstants {
     public static final String QUERY_POSTS_BY_CATEGORY = "SELECT * FROM "
             + TABLE_POSTS + " WHERE " + COLUMN_CATEGORY + "=?";
 
-    public static final String QUERY_LOGIN = "SELECT " + COLUMN_USER_ID +", " + COLUMN_USER_NAME + " FROM "
-            + TABLE_USERS +" WHERE " +COLUMN_USER_NAME + "=?" +" AND " + COLUMN_USER_PASSWORD +"=?";
+    public static final String QUERY_LOGIN = "SELECT " + COLUMN_USER_ID +
+            ", " + COLUMN_USER_NAME + ", " + COLUMN_USER_LEVEL + " FROM "
+            + TABLE_USERS + " WHERE " +COLUMN_USER_NAME + "=?" + " AND " +
+            COLUMN_USER_PASSWORD + "=?";
 
     public static final String CREATE_POST = "INSERT INTO " + TABLE_POSTS  +
             "(" + COLUMN_POSTER_ID + ", " + COLUMN_CATEGORY +

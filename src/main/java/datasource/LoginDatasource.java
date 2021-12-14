@@ -13,16 +13,15 @@ public class LoginDatasource implements DatabaseConnection {
     private PreparedStatement queryLogin;
     private PreparedStatement queryUserName;
     private PreparedStatement queryEmail;
-
     private PreparedStatement createUserAccount;
 
     @Override
     public void initializePreparedStatement() {
         try {
-            queryLogin = Datasource.getInstance().conn.prepareStatement(QUERY_LOGIN);
-            queryUserName = Datasource.getInstance().conn.prepareStatement(QUERY_USERNAME);
-            queryEmail = Datasource.getInstance().conn.prepareStatement(QUERY_EMAIL);
-            createUserAccount = Datasource.getInstance().conn.prepareStatement(CREATE_USER_ACCOUNT);
+            queryLogin = Connection.getInstance().conn.prepareStatement(QUERY_LOGIN);
+            queryUserName = Connection.getInstance().conn.prepareStatement(QUERY_USERNAME);
+            queryEmail = Connection.getInstance().conn.prepareStatement(QUERY_EMAIL);
+            createUserAccount = Connection.getInstance().conn.prepareStatement(CREATE_USER_ACCOUNT);
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
             e.printStackTrace();
@@ -95,6 +94,7 @@ public class LoginDatasource implements DatabaseConnection {
             User user = new User();
             user.setUserId(results.getInt(1));
             user.setUserName(results.getString(2));
+            user.setLevel(results.getString(3));
             return user;
         } catch(SQLException e) {
             System.out.println("Query failed: " + e.getMessage());

@@ -2,6 +2,7 @@ package datasource;
 
 import model.Comment;
 import model.Post;
+import model.TextFormatter;
 import model.User;
 
 import java.sql.*;
@@ -21,11 +22,11 @@ public class UserDatasource implements DatabaseConnection{
     @Override
     public void initializePreparedStatement() {
         try {
-            queryCommentsFromPost = Datasource.getInstance().conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
-            queryPostsByCategory = Datasource.getInstance().conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
-            createPost = Datasource.getInstance().conn.prepareStatement(CREATE_POST);
-            queryPost = Datasource.getInstance().conn.prepareStatement(QUERY_POST);
-            createComment = Datasource.getInstance().conn.prepareStatement(CREATE_COMMENT);
+            queryCommentsFromPost = Connection.getInstance().conn.prepareStatement(QUERY_COMMENTS_FROM_POST);
+            queryPostsByCategory = Connection.getInstance().conn.prepareStatement(QUERY_POSTS_BY_CATEGORY);
+            createPost = Connection.getInstance().conn.prepareStatement(CREATE_POST);
+            queryPost = Connection.getInstance().conn.prepareStatement(QUERY_POST);
+            createComment = Connection.getInstance().conn.prepareStatement(CREATE_COMMENT);
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
             e.printStackTrace();
@@ -56,7 +57,7 @@ public class UserDatasource implements DatabaseConnection{
     }
 
     public boolean searchPostByTitle(String value) {
-        try (Statement statement = Datasource.getInstance().conn.createStatement();
+        try (Statement statement = Connection.getInstance().conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS +" WHERE " +
                      COLUMN_TITLE + " LIKE '" + value + "%'")){
             if (!results.next())
@@ -88,12 +89,13 @@ public class UserDatasource implements DatabaseConnection{
     }
 
     public void queryPosts() {
-        try (Statement statement = Datasource.getInstance().conn.createStatement();
+        try (Statement statement = Connection.getInstance().conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + TABLE_POSTS)){
             while (results.next()) {
                 System.out.println("Post id: " + results.getInt(1));
-                System.out.println("Category: " + results.getString(3));
-                System.out.println("Title: " + results.getString(4) + "\n");
+                System.out.println("\tCategory: " + results.getString(3));
+                System.out.println(TextFormatter.formatText("Title: " + results.getString(4)));
+                System.out.println();
             }
         } catch (SQLException e) {
             System.out.println("Query failed: " + e.getMessage());
@@ -128,7 +130,6 @@ public class UserDatasource implements DatabaseConnection{
             queryCommentsFromPost(post);
             return post;
         } catch(SQLException e) {
-            e.printStackTrace();
             System.out.println("Input does not match any post ...");
             return null;
         }

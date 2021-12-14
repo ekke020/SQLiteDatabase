@@ -5,15 +5,15 @@ import java.sql.*;
 import static menu.SqlConstants.*;
 
 
-public class Datasource {
+public class Connection {
 
     private static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/forum_database";
     private static final String CONNECTION_STRING_BEFORE_DATABASE_CREATION = "jdbc:mysql://localhost:3306";
 
-    public Connection conn = null;
-    private static Datasource datasource=null;
+    public java.sql.Connection conn = null;
+    private static Connection connection = null;
 
-    private Datasource(){
+    private Connection() {
         openConnection();
     }
 
@@ -30,11 +30,11 @@ public class Datasource {
         }
     }
 
-    public static Datasource getInstance(){
-        if(datasource==null){
-            datasource = new Datasource();
+    public static Connection getInstance() {
+        if(connection == null){
+            connection = new Connection();
         }
-        return datasource;
+        return connection;
     }
 
     private void createDatabase() throws SQLException {

@@ -25,13 +25,13 @@ public class AdminDatasource implements DatabaseConnection {
     @Override
     public void initializePreparedStatement() {
         try {
-            queryUserTable = Datasource.getInstance().conn.prepareStatement(QUERY_USER_TABLE);
-            queryPostTable = Datasource.getInstance().conn.prepareStatement(QUERY_POST_TABLE);
-            createUsers = Datasource.getInstance().conn.prepareStatement(CREATE_USER_ACCOUNT);
-            updateUserColumnName = Datasource.getInstance().conn.prepareStatement(UPDATE_USER_COLUMN_NAME);
-            updateUserColumnEmail = Datasource.getInstance().conn.prepareStatement(UPDATE_USER_COLUMN_EMAIL);
-            updateUserColumnPassword = Datasource.getInstance().conn.prepareStatement(UPDATE_USER_COLUMN_PASSWORD);
-            searchTable = Datasource.getInstance().conn.prepareStatement(SEARCH_TABLE);
+            queryUserTable = Connection.getInstance().conn.prepareStatement(QUERY_USER_TABLE);
+            queryPostTable = Connection.getInstance().conn.prepareStatement(QUERY_POST_TABLE);
+            createUsers = Connection.getInstance().conn.prepareStatement(CREATE_USER_ACCOUNT);
+            updateUserColumnName = Connection.getInstance().conn.prepareStatement(UPDATE_USER_COLUMN_NAME);
+            updateUserColumnEmail = Connection.getInstance().conn.prepareStatement(UPDATE_USER_COLUMN_EMAIL);
+            updateUserColumnPassword = Connection.getInstance().conn.prepareStatement(UPDATE_USER_COLUMN_PASSWORD);
+            searchTable = Connection.getInstance().conn.prepareStatement(SEARCH_TABLE);
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
             e.printStackTrace();
@@ -41,8 +41,8 @@ public class AdminDatasource implements DatabaseConnection {
     @Override
     public void closePreparedStatement() {
         try {
-            if (Datasource.getInstance().conn != null) {
-                Datasource.getInstance().conn.close();
+            if (Connection.getInstance().conn != null) {
+                Connection.getInstance().conn.close();
             }
         } catch (SQLException e) {
             System.out.println("Couldn't close connection: " + e.getMessage());
@@ -117,7 +117,7 @@ public class AdminDatasource implements DatabaseConnection {
     }
 
     public boolean searchTable(String table, String column, String value) {
-        try (Statement statement = Datasource.getInstance().conn.createStatement();
+        try (Statement statement = Connection.getInstance().conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + table +" WHERE " +
                      column + " LIKE '" + value + "%'")){
             switch (table) {

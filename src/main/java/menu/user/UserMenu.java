@@ -20,7 +20,7 @@ public class UserMenu implements Runnable {
     private UserConstants userConstants = MAIN_MENU;
     private final UserDatasource userDatasource = new UserDatasource();
 
-    private static final String CATEGORY_1 = "Abortions & Sins";
+    private static final String CATEGORY_1 = "Love & Latin";
     private static final String CATEGORY_2 = "The classic popes";
     private static final String CATEGORY_3 = "Fun with bible";
     private static final String CATEGORY_4 = "Confessions";
@@ -74,7 +74,7 @@ public class UserMenu implements Runnable {
     private void printMainMenu() {
         System.out.println("\t1: View all posts");
         System.out.println("\t2: View posts by category");
-        System.out.println("\t3: Search post");
+        System.out.println("\t3: Search post by title");
         System.out.println("\t4: Create post");
         System.out.println("\t5: Enter post");
         System.out.println("\t6: Logout");
@@ -104,7 +104,7 @@ public class UserMenu implements Runnable {
     }
 
     private void printCategoryChoices() {
-        System.out.println("\t1: Abortions & Sins");
+        System.out.println("\t1: Love & Latin");
         System.out.println("\t2: The classic popes");
         System.out.println("\t3: Fun with bible");
         System.out.println("\t4: Confessions");
@@ -167,9 +167,10 @@ public class UserMenu implements Runnable {
             userConstants = MAIN_MENU;
         } else if (input.matches("[0-9]+")) {
             currentPost = userDatasource.queryPost(Integer.parseInt(input));
-            currentPost.printEntirePost();
-            if (currentPost != null)
+            if (currentPost != null) {
+                currentPost.printEntirePost();
                 userConstants = POST_MENU;
+            }
         } else {
             System.out.println("Enter valid input ...");
         }
@@ -177,8 +178,8 @@ public class UserMenu implements Runnable {
 
     private void printPostMenu() {
         System.out.println("POST MENU");
-        System.out.println("1: Comment");
-        System.out.println("2: back");
+        System.out.println("\t1: Comment");
+        System.out.println("\t2: back");
     }
 
     private void postMenuAlternatives(String input) {
@@ -191,6 +192,8 @@ public class UserMenu implements Runnable {
     private void postComment(int postId){
         System.out.println("Post your comment: ");
         userDatasource.postComment(scanner.nextLine(),postId, user.getUserId());
+        currentPost = userDatasource.queryPost(currentPost.getPostId());
+        currentPost.printEntirePost();
     }
 
 }

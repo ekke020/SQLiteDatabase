@@ -1,8 +1,6 @@
 package menu.system;
 
-import app.App;
 import datasource.AdminDatasource;
-import datasource.Datasource;
 import model.User;
 
 import java.util.Scanner;
@@ -11,14 +9,16 @@ import static menu.system.MenuConstants.getMenuConstants;
 
 import static menu.SqlConstants.*;
 
-public class SystemMenu implements Runnable {
+public class AdminMenu implements Runnable {
 
     private final Scanner scanner = new Scanner(System.in);
     private boolean running = true;
+    private final User user;
     private final AdminDatasource adminDatasource = new AdminDatasource();
 
-    public SystemMenu(User user) {
+    public AdminMenu(User user) {
         adminDatasource.initializePreparedStatement();
+        this.user = user;
     }
 
     @Override

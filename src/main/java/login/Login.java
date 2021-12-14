@@ -1,6 +1,7 @@
 package login;
 
 import datasource.LoginDatasource;
+import menu.system.AdminMenu;
 import menu.user.UserMenu;
 import model.User;
 
@@ -46,14 +47,22 @@ public class Login {
         if (user != null) {
             notLoggedIn = false;
             datasource.closePreparedStatement();
-            UserMenu userMenu = new UserMenu(user);
-            //SystemMenu systemMenu = new SystemMenu(user);
-            System.out.println("Welcome: " + user.getUserName() + "!");
-            applicationMainThread = new Thread(userMenu);
-            applicationMainThread.start();
+            startApplicationThread(user);
         } else {
             System.out.println("The username or password is incorrect.");
         }
+    }
+
+    private void startApplicationThread(User user) {
+        if (user.getLevel().equals("admin")) {
+            AdminMenu systemMenu = new AdminMenu(user);
+            applicationMainThread = new Thread(systemMenu);
+        } else if (user.getLevel().equals("standard")) {
+            UserMenu userMenu = new UserMenu(user);
+            applicationMainThread = new Thread(userMenu);
+        }
+        System.out.println("Welcome: " + user.getUserName() + "!");
+        applicationMainThread.start();
     }
 
     private void createAccount(){
