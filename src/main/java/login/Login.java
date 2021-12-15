@@ -9,11 +9,12 @@ import java.util.Scanner;
 
 public class Login {
 
-    private static final Scanner SCANNER = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private static LoginDatasource datasource;
     private static Thread applicationMainThread;
     private boolean notLoggedIn = true;
-
+    private final String standard = "standard";
+    private final String admin = "admin";
 
     public void initializeDatasource() {
         datasource = new LoginDatasource();
@@ -24,7 +25,7 @@ public class Login {
     private void logInProcess() {
         while(notLoggedIn) {
             printLoginMenu();
-            loginMenuAlternatives(SCANNER.nextLine());
+            loginMenuAlternatives(scanner.nextLine());
         }
     }
 
@@ -54,10 +55,10 @@ public class Login {
     }
 
     private void startApplicationThread(User user) {
-        if (user.getLevel().equals("admin")) {
+        if (user.getLevel().equals(admin)) {
             AdminMenu systemMenu = new AdminMenu(user);
             applicationMainThread = new Thread(systemMenu);
-        } else if (user.getLevel().equals("standard")) {
+        } else if (user.getLevel().equals(standard)) {
             UserMenu userMenu = new UserMenu(user);
             applicationMainThread = new Thread(userMenu);
         }
@@ -67,19 +68,19 @@ public class Login {
 
     private void createAccount(){
         System.out.println("Enter username:");
-        String username = SCANNER.nextLine();
+        String username = scanner.nextLine();
         while(datasource.isUserNameTaken(username)){
             System.out.println("Username is taken, try another username:");
-            username=SCANNER.nextLine();
+            username= scanner.nextLine();
         }
         System.out.println("Enter email:");
-        String email = SCANNER.nextLine();
+        String email = scanner.nextLine();
         while(datasource.isEmailTaken(email)){
             System.out.println("There is already an account with this email");
-            email =SCANNER.nextLine();
+            email = scanner.nextLine();
         }
         System.out.println("Enter password:");
-        String password = SCANNER.nextLine();
+        String password = scanner.nextLine();
         if(datasource.createAccount(username,email,password)){
             System.out.println("Account successfully created!");
         }
@@ -94,12 +95,12 @@ public class Login {
 
     private String enterUsername() {
         System.out.println("Enter username:");
-        return SCANNER.nextLine();
+        return scanner.nextLine();
     }
 
     private String enterPassword() {
         System.out.println("Enter password:");
-        return SCANNER.nextLine();
+        return scanner.nextLine();
     }
 
     public void logout(User user) {

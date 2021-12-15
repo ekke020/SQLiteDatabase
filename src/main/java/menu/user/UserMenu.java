@@ -5,6 +5,7 @@ import login.Login;
 import model.Post;
 import model.User;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 import static menu.user.UserConstants.*;
@@ -103,14 +104,6 @@ public class UserMenu implements Runnable {
         }
     }
 
-    private void printCategoryChoices() {
-        System.out.println("\t1: Love & Latin");
-        System.out.println("\t2: The classic popes");
-        System.out.println("\t3: Fun with bible");
-        System.out.println("\t4: Confessions");
-        System.out.println("\t0: Back");
-    }
-
     private void createNewPost() {
         System.out.println("Pick a category:");
         printCategoryChoices();
@@ -126,13 +119,21 @@ public class UserMenu implements Runnable {
         }
     }
 
+    private void printCategoryChoices() {
+        System.out.println("\t1: Love & Latin");
+        System.out.println("\t2: The classic popes");
+        System.out.println("\t3: Fun with bible");
+        System.out.println("\t4: Confessions");
+        System.out.println("\tB: Back");
+    }
+
     private String newPostCategoryChoice(String input) {
-        switch (input) {
+        switch (input.toUpperCase(Locale.ROOT)) {
             case "1" -> {return CATEGORY_1;}
             case "2" -> {return CATEGORY_2;}
             case "3" -> {return CATEGORY_3;}
             case "4" -> {return CATEGORY_4;}
-            case "0" -> {userConstants = MAIN_MENU; return "";}
+            case "B" -> {userConstants = MAIN_MENU; return "";}
             default -> {return "";}
         }
     }

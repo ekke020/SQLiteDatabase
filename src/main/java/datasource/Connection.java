@@ -31,7 +31,7 @@ public class Connection {
     }
 
     public static Connection getInstance() {
-        if(connection == null){
+        if(connection == null) {
             connection = new Connection();
         }
         return connection;

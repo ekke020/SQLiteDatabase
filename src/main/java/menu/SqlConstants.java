@@ -92,7 +92,6 @@ public class SqlConstants {
             + COLUMN_USER_EMAIL + ", "
             + COLUMN_USER_PASSWORD + ") VALUES (?,?,?)";
 
-    //SELECT (user_name) FROM users WHERE user_name='pelle';
 
     public static final String QUERY_USERNAME = "SELECT (" + COLUMN_USER_NAME + ") FROM " + TABLE_USERS + " WHERE "
                 + COLUMN_USER_NAME + "=?";
@@ -100,9 +99,6 @@ public class SqlConstants {
     public static final String QUERY_EMAIL = "SELECT (" + COLUMN_USER_EMAIL + ") FROM " + TABLE_USERS + " WHERE "
             + COLUMN_USER_EMAIL + "=?";
 
-    //    COLUMN_USER_NAME
-//    COLUMN_USER_EMAIL
-//    COLUMN_USER_PASSWORD
     public static final String UPDATE_USER_COLUMN_NAME = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_NAME + "=? WHERE " + COLUMN_USER_ID + "=?";
     public static final String UPDATE_USER_COLUMN_EMAIL = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_EMAIL + "=? WHERE " + COLUMN_USER_ID + "=?";
     public static final String UPDATE_USER_COLUMN_PASSWORD = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_PASSWORD + "=? WHERE " + COLUMN_USER_ID + "=?";

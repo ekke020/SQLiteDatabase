@@ -5,7 +5,7 @@ import model.User;
 
 import java.util.Scanner;
 
-import static menu.system.MenuConstants.getMenuConstants;
+import static menu.system.AdminConstants.getAdminConstants;
 
 import static menu.SqlConstants.*;
 
@@ -26,7 +26,7 @@ public class AdminMenu implements Runnable {
         printMainMenu();
         mainMenuAlternatives(scanner.nextLine());
         while (running) {
-            switch (getMenuConstants()) {
+            switch (getAdminConstants()) {
                 case MAIN_MENU -> {
                     printMainMenu();
                     mainMenuAlternatives(scanner.nextLine());
@@ -52,8 +52,8 @@ public class AdminMenu implements Runnable {
 
     private void mainMenuAlternatives(String input) {
         switch (input) {
-            case "1" -> MenuConstants.setMenuConstants(MenuConstants.POST_TABLE_MENU);
-            case "2" -> MenuConstants.setMenuConstants(MenuConstants.USER_TABLE_MENU);
+            case "1" -> AdminConstants.setMenuConstants(AdminConstants.POST_TABLE_MENU);
+            case "2" -> AdminConstants.setMenuConstants(AdminConstants.USER_TABLE_MENU);
             case "3" -> closeDatabase();
         }
     }
@@ -76,7 +76,7 @@ public class AdminMenu implements Runnable {
             case "2" -> chooseFieldToEdit();
             case "3" -> chooseFieldToSearchBy(TABLE_USERS);
             case "4" -> generateNewUsers();
-            case "5" -> MenuConstants.setMenuConstants(MenuConstants.MAIN_MENU);
+            case "5" -> AdminConstants.setMenuConstants(AdminConstants.MAIN_MENU);
         }
     }
 
@@ -94,7 +94,7 @@ public class AdminMenu implements Runnable {
                 promptEnterKey();
             }
             case "2" -> chooseFieldToSearchBy(TABLE_POSTS);
-            case "3" -> MenuConstants.setMenuConstants(MenuConstants.MAIN_MENU);
+            case "3" -> AdminConstants.setMenuConstants(AdminConstants.MAIN_MENU);
         }
     }
 
