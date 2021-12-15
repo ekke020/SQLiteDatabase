@@ -20,9 +20,9 @@ public class Connection {
     private void openConnection() {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING_BEFORE_DATABASE_CREATION, "root", "root");
-            createDatabase();
+            createDatabaseIfNotExists();
             conn = DriverManager.getConnection(CONNECTION_STRING, "root", "root");
-            createTables();
+            createTablesIfNotExist();
         } catch (SQLException e) {
             System.out.println("Couldn't connect to the database: " + e.getMessage());
             System.exit(0);
@@ -37,13 +37,13 @@ public class Connection {
         return connection;
     }
 
-    private void createDatabase() throws SQLException {
+    private void createDatabaseIfNotExists() throws SQLException {
         try (Statement statement = conn.createStatement()) {
             statement.execute(CREATE_DATABASE_STATEMENT);
         }
     }
 
-    private void createTables() throws SQLException {
+    private void createTablesIfNotExist() throws SQLException {
         try (Statement statement = conn.createStatement()) {
             statement.execute(CREATE_POST_TABLE);
             statement.execute(CREATE_USER_TABLE);

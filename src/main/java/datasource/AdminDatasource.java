@@ -116,6 +116,8 @@ public class AdminDatasource implements DatabaseConnection {
         }
     }
 
+
+
     public boolean searchTable(String table, String column, String value) {
         try (Statement statement = Connection.getInstance().conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT * FROM " + table +" WHERE " +
