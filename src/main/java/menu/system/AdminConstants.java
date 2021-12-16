@@ -2,7 +2,7 @@ package menu.system;
 
 public enum AdminConstants {
 
-    MAIN_MENU, USER_TABLE_MENU, POST_TABLE_MENU;
+    MAIN_MENU, USER_TABLE_MENU, POST_TABLE_MENU, ROBOT_MENU;
 
     private static AdminConstants adminConstants = AdminConstants.MAIN_MENU;
 

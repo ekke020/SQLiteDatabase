@@ -56,6 +56,7 @@ public class SqlConstants {
             COLUMN_TIME_STAMP + " text" +
             ") ";
 
+
     public static final String QUERY_COMMENTS_FROM_POST = " SELECT " + TABLE_COMMENTS + "." + COLUMN_TEXT + ", " +
             TABLE_COMMENTS + "." + COLUMN_INDEX + ", " + TABLE_COMMENTS + "." + COLUMN_TIME_STAMP +
             ", " + TABLE_USERS + "." + COLUMN_USER_NAME +
@@ -85,6 +86,7 @@ public class SqlConstants {
             TABLE_POSTS + "." + COLUMN_POSTER_ID + " WHERE " + TABLE_POSTS + "." + COLUMN_POST_ID + "=?";
 
     public static final String QUERY_USER_TABLE = "SELECT * FROM " + TABLE_USERS;
+
     public static final String QUERY_POST_TABLE = "SELECT * FROM " + TABLE_POSTS;
 
     public static final String CREATE_USER_ACCOUNT = "INSERT INTO " + TABLE_USERS + "("
@@ -104,4 +106,6 @@ public class SqlConstants {
     public static final String UPDATE_USER_COLUMN_PASSWORD = "UPDATE " + TABLE_USERS + " SET " + COLUMN_USER_PASSWORD + "=? WHERE " + COLUMN_USER_ID + "=?";
 
     public static final String SEARCH_TABLE = "SELECT * FROM ? WHERE ? LIKE ?%";
+
+    public static final String QUERY_RANDOM_POST = "SELECT * FROM " + TABLE_POSTS + " ORDER BY RAND() LIMIT 1";
 }

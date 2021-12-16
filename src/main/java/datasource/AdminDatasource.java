@@ -21,7 +21,6 @@ public class AdminDatasource implements DatabaseConnection {
     private PreparedStatement updateUserColumnPassword;
     private PreparedStatement searchTable;
 
-
     @Override
     public void initializePreparedStatement() {
         try {
@@ -116,7 +115,22 @@ public class AdminDatasource implements DatabaseConnection {
         }
     }
 
-
+    public List<User> queryUsers() {
+        List<User> users = new ArrayList<>();
+        try (Statement statement = Connection.getInstance().conn.createStatement();
+             ResultSet results = statement.executeQuery(QUERY_USER_TABLE))   {
+            while (results.next()) {
+                User user = new User();
+                user.setUserId(results.getInt(INDEX_USER_ID));
+                user.setUserName(results.getString(INDEX_USER_NAME));
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public boolean searchTable(String table, String column, String value) {
         try (Statement statement = Connection.getInstance().conn.createStatement();

@@ -1,10 +1,15 @@
 package menu.system;
 
+import bot.Robot;
 import datasource.AdminDatasource;
 import model.User;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
+import static menu.system.AdminConstants.MAIN_MENU;
 import static menu.system.AdminConstants.getAdminConstants;
 
 import static menu.SqlConstants.*;
@@ -15,6 +20,7 @@ public class AdminMenu implements Runnable {
     private boolean running = true;
     private final User user;
     private final AdminDatasource adminDatasource = new AdminDatasource();
+    private List<Thread> robots = new ArrayList<>();
 
     public AdminMenu(User user) {
         adminDatasource.initializePreparedStatement();
@@ -39,6 +45,9 @@ public class AdminMenu implements Runnable {
                     printPostTableMenu();
                     postTableMenuAlternatives(scanner.nextLine());
                 }
+                case ROBOT_MENU -> {
+                    createRobot();
+                }
             }
         }
     }
@@ -47,14 +56,16 @@ public class AdminMenu implements Runnable {
         System.out.println("MAIN MENU");
         System.out.println("\t1: View post table");
         System.out.println("\t2: View user table");
-        System.out.println("\t3: Exit database");
+        System.out.println("\t3: Test bot");
+        System.out.println("\t4: Exit database");
     }
 
     private void mainMenuAlternatives(String input) {
         switch (input) {
             case "1" -> AdminConstants.setMenuConstants(AdminConstants.POST_TABLE_MENU);
             case "2" -> AdminConstants.setMenuConstants(AdminConstants.USER_TABLE_MENU);
-            case "3" -> closeDatabase();
+            case "3" -> AdminConstants.setMenuConstants(AdminConstants.ROBOT_MENU);
+            case "4" -> closeDatabase();
         }
     }
 
@@ -168,6 +179,14 @@ public class AdminMenu implements Runnable {
         adminDatasource.createUsers(amount);
     }
 
+    private void createRobot() {
+        List<User> users = adminDatasource.queryUsers();
+        User user = users.get(new Random().nextInt(users.size()) + 2);
+        Robot robot = new Robot(user);
+        robots.add(new Thread(robot));
+        robots.get(robots.size() - 1).start();
+        AdminConstants.setMenuConstants(MAIN_MENU);
+    }
     private void promptEnterKey() {
         System.out.println("Press \"ENTER\" to continue...");
         scanner.nextLine();
